@@ -1,0 +1,5 @@
+kolejnosc,standard_key,formula,tylko_gdy_brak,uwagi
+1,intangible_assets,goodwill + other_intangible_assets,NIE,Standard: WNiP ogolem = wartosc firmy + pozostale WNiP
+2,gross_profit,revenues - cost_of_sales - distribution_expenses - administrative_expenses,NIE,UWAGA: standardowy 'Zysk ze sprzedazy' to NIE jest 'Zysk brutto ze sprzedazy' z raportu spolki
+3,ebit,gross_profit + other_operating_income - other_operating_costs,TAK,"Regula WARUNKOWA: liczona tylko gdy spolka nie pokazuje linii EBIT (KGHM idzie od zysku ze sprzedazy prosto do zysku przed opodatkowaniem). Gdy spolka podaje EBIT wprost (Neuca), zostaje wartosc raportowana"
+4,change_in_working_capital,change_in_receivables + change_in_inventories + change_in_payables + change_in_other_assets,NIE,UWAGA: przy fladze kapital_obrotowy_z_bilansu=TAK te 4 klucze sa i tak nadpisywane wyliczeniem z bilansu

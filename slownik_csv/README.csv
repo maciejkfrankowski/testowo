@@ -1,0 +1,56 @@
+SLOWNIK MAPOWANIA SPRAWOZDAN -> STANDARD BIZNESRADAR
+Jak to dziala
+"1. Arkusz 'Klucze' to slownik docelowy - klucze standardowe wyciagniete z NEU.xlsx (arkusz Spr Fin, kol. A i B)."
+2. Arkusz 'Aliasy' to serce slownika: kazda linia to regula 'ta nazwa w tej sekcji -> ten klucz standardowy'.
+"   - pusta kolumna 'spolka' = alias GLOBALNY, dziala dla wszystkich spolek (tak rosnie slownik)"
+"   - wpisana spolka = wyjatek tylko dla niej, nadpisuje alias globalny"
+   - 'sekcja' rozroznia te same nazwy w roznych miejscach (np. 'Udzielone pozyczki' w aktywach trwalych i obrotowych)
+   - 'sekcja' = * oznacza dowolna sekcje
+   - AGREGACJA: kilka wierszy z tym samym standard_key sumuje sie (np. 4 linie -> noncurrent_investments)
+   - ROZDZIELENIE: ten sam wiersz zrodlowy moze miec 2 aliasy (np. srodki pieniezne -> cash ORAZ current_investments)
+"   - 'znak' = -1 gdy spolka podaje koszt na minusie, a standard oczekuje wartosci dodatniej"
+"   - standard_key = POMIN oznacza swiadome pominiecie (sumy posrednie, naglowki, pozycje poza standardem)"
+"3. Arkusz 'Reguly_obliczane' - klucze, ktorych nie ma wprost w raporcie, liczone z innych kluczy."
+"4. Arkusz 'Spolki' - konfiguracja parsera per plik (arkusz, kolumny, naglowki sekcji)."
+Uruchomienie
+"python3 map.py --slownik slownik.xlsx --spolka NEU --plik ""Neuca za I kwartal 2026 roku_sprawozdania.xlsx"" --out wynik_NEU.xlsx"
+"Wynik zawiera arkusze: Wynik (kolumna w standardzie), Walidacja (14 sum kontrolnych), Audyt (slad kazdego wiersza), Niezmapowane."
+Dodanie kolejnej spolki
+"1. Dopisz wiersz w 'Spolki' (arkusz, kolumny, naglowki sekcji z jej pliku)."
+2. Odpal map.py - pozycje o nazwach juz znanych zmapuja sie same z globalnych aliasow.
+"3. Zajrzyj do arkusza 'Niezmapowane' + podpowiedzi fuzzy na konsoli, dopisz brakujace aliasy do 'Aliasy'."
+4. Powtarzaj az 'Walidacja' bedzie caly czas OK. Z kazda spolka slownik lapie coraz wiecej za pierwszym razem.
+"Kolory w arkuszu Aliasy: zolty = DO_WERYFIKACJI (decyzja merytoryczna), szary = POMIN."
+"Metodologia potwierdzona wzorcami NEU.xlsx, KGH.xlsx i AOL.xlsx (I 2026)"
+- change_in_other_assets = (inne zob. krotkoterminowe + rozliczenia miedzyokresowe) Q - (te same) Q-1
+- UKLAD USTAWY O RACHUNKOWOSCI (AOL): RZiS w wariancie POROWNAWCZYM - cale 'Koszty dzialalnosci
+"  operacyjnej' ida w cost_of_sales, a distribution_expenses i administrative_expenses zostaja PUSTE."
+- W UoR reckoning = 'Rezerwy na zobowiazania' + 'Rozliczenia miedzyokresowe' (pasywa).
+- W UoR year_profit JEST wypelniany (ustawa rozdziela wynik okresu od lat ubieglych).
+"- Dane w zlotych: mnoznik 0.001, kazda pozycja zrodlowa zaokraglana do pelnych tysiecy."
+  Przy takich spolkach uzywaj tolerancji 2 w walidacji i porownaniu (zaokraglenia daja +/-1).
+"- Gdy kolumna porownawcza NIE jest poprzednim kwartalem (UoR podaje rok wczesniej), kapitalu"
+  obrotowego nie da sie policzyc ze sprawozdania. Podaj bilans poprzedniego kwartalu z pliku wzorcowego:
+"     prev = brmap.wczytaj_okres_wzorca('AOL.xlsx', '2025-12-31')"
+"     brmap.mapuj('slownik.xlsx', 'AOL', plik, bilans_poprzedni=prev)"
+- KAPITAL OBROTOWY w przeplywach NIE jest przepisywany z rachunku przeplywow spolki.
+  Liczy sie go z roznic kolejnych BILANSOW (flaga kapital_obrotowy_z_bilansu w arkuszu Spolki):
+     change_in_inventories  = zapasy(Q-1) - zapasy(Q)
+     change_in_receivables  = naleznosci_kr(Q-1) - naleznosci_kr(Q)
+     change_in_payables     = [zob_kr - zob_kr_inne](Q) - [zob_kr - zob_kr_inne](Q-1)
+     change_in_other_assets = zob_kr_inne(Q) - zob_kr_inne(Q-1)
+"  Zgodnosc co do zlotowki na obu spolkach, 10/10 pozycji."
+- current_borrowings / noncurrent_borrowings = WYLACZNIE linia 'Kredyty i pozyczki'.
+  Faktoring i 'Inne zobowiazania finansowe' ida w *_other_liabilities.
+- property zawiera prawo do uzytkowania; right_to_use_assets to pozycja 'w tym' (nie sumuje sie).
+- retained_earnings = CALA pozycja zyskow zatrzymanych; year_profit zostaje PUSTY w kwartalach.
+- Kapitaly z wyceny/OCI nie wchodza do rozbicia kapitalu wlasnego -> klucz pomocniczy
+"  kapitaly_pozostale_nierozdzielone (nie trafia do arkusza Wynik, ale domyka sume kontrolna)."
+Uwagi techniczne
+"- Nazwy sa porownywane po normalizacji: male litery, bez polskich znakow i interpunkcji."
+  Dlatego 'ZYSK NETTO' i 'Zysk netto' to ten sam alias - nie trzeba wpisywac obu wariantow zapisu.
+"  Gdyby jednak trafily oba, skrypt je odfiltruje i wypisze ostrzezenie (bez tego pozycja liczylaby sie podwojnie)."
+- Kolumna 'mnoznik' w arkuszu Spolki sprowadza jednostki do tysiecy (KGHM raportuje w mln -> 1000).
+"- Znaczniki sekcji: 'Naglowek=>KOD' otwiera blok, '$Suma=>KOD' zamyka blok (dla spolek bez naglowkow)."
+- Reguly z 'tylko_gdy_brak' = TAK licza sie wylacznie gdy spolka nie poda pozycji wprost.
+"- Ostatnia kontrola (stopa podatku) jest MIEKKA: 'PODEJRZANA' to sygnal do sprawdzenia, nie blad."

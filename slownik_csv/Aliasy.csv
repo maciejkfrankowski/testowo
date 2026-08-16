@@ -1,0 +1,401 @@
+spolka,sekcja,nazwa_oryginalna,standard_key,znak,waga,pewnosc,zrodlo,uwagi
+,*,Pozycja,POMIN,1,1,PEWNE,NEU Q1 2026,wiersz naglowkowy
+,RZIS,Przychody ze sprzedaży,revenues,1,1,PEWNE,NEU Q1 2026,
+,RZIS,Koszt własny sprzedaży,cost_of_sales,-1,1,PEWNE,NEU Q1 2026,standard trzyma koszty ze znakiem dodatnim
+,RZIS,Zysk brutto ze sprzedaży,POMIN,1,1,PEWNE,NEU Q1 2026,PULAPKA: to marza brutto (przychody-KWS). Standardowy gross_profit = po kosztach sprzedazy i zarzadu -> liczony regula
+,RZIS,Koszty sprzedaży,distribution_expenses,-1,1,PEWNE,NEU Q1 2026,
+,RZIS,Koszty ogólnego zarządu,administrative_expenses,-1,1,PEWNE,NEU Q1 2026,
+,RZIS,Pozostałe przychody operacyjne,other_operating_income,1,1,PEWNE,NEU Q1 2026,
+,RZIS,Pozostałe koszty operacyjne,other_operating_costs,-1,1,PEWNE,NEU Q1 2026,
+,RZIS,Zmiana stanu odpisów aktualizujących należności i pożyczki,other_operating_income,1,1,PEWNE,NEU Q1 2026,"POTWIERDZONE wzorcem: 5024-4157=867 = other_operating_income; odpisy netuja sie z PRZYCHODAMI, nie kosztami"
+,RZIS,Zysk z działalności operacyjnej,ebit,1,1,PEWNE,NEU Q1 2026,
+,RZIS,Przychody finansowe,finance_income,1,1,PEWNE,NEU Q1 2026,
+,RZIS,Koszty finansowe,finance_costs,-1,1,PEWNE,NEU Q1 2026,
+,RZIS,Udział w zyskach/stratach jednostek stowarzyszonych,other_income,1,1,WYSOKA,NEU Q1 2026,
+,RZIS,Pozostałe zyski/straty z inwestycji,other_income,1,1,WYSOKA,NEU Q1 2026,
+,RZIS,Zysk przed opodatkowaniem,before_tax_profit,1,1,PEWNE,NEU Q1 2026,
+,RZIS,Zysk przed opodatkowaniem,net_gross_profit,1,1,PEWNE,NEU Q1 2026,standard duplikuje: zysk z dzial. gospodarczej = przed opodatkowaniem
+,RZIS,Podatek dochodowy,POMIN,1,1,WYSOKA,NEU Q1 2026,standard nie ma klucza na podatek - wynika z roznicy before_tax_profit - net_profit
+,RZIS,Zysk netto,net_profit,1,1,PEWNE,NEU Q1 2026,
+,RZIS,Zysk przypadający akcjonariuszom jednostki dominującej,shareholder_net_profit,1,1,PEWNE,NEU Q1 2026,"NIE zasila year_profit: u spolek MSSF year_profit zostaje pusty, bo caly wynik siedzi w retained_earnings"
+,RZIS,Zysk (strata) przypadający akcjonariuszom niekontrolującym,POMIN,1,1,PEWNE,NEU Q1 2026,zawarte w nonshare_capital w bilansie
+,RZIS,Średnia ważona liczba akcji zwykłych,share_amount,1,1,DO_WERYFIKACJI,NEU Q1 2026,UWAGA: to srednia wazona. Standard oczekuje liczby akcji na dzien bilansowy (tu: kapital podstawowy 4626 tys. / 1 zl = 4 626 000)
+,RZIS,"Pozycje, które nie mogą być przeniesione do wyniku:",POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Zysk (strata) z wyceny inwestycji w instrumenty kapitałowe,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,"Pozycje, które nie mogą być przeniesione do wyniku, przed opodatkowaniem",POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,"Pozycje, które mogą być przeniesione do wyniku:",POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Zabezpieczenie przepływów pieniężnych,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Różnice kursowe z przeliczenia jednostek działających za granicą,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Wycena aktywów finansowych wycenianych przez inne całkowite dochody,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,"Pozycje, które mogą być przeniesione do wyniku, przed opodatkowaniem",POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,"Inne całkowite dochody, przed opodatkowaniem",POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,"Podatek dochodowy dotyczący składników innych całkowitych dochodów, które mogą być przeniesione do wyniku",POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Inne całkowite dochody netto,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Całkowite dochody ogółem,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Całkowite dochody ogółem przypisane akcjonariuszom jednostki dominującej,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Całkowite dochody ogółem przypisane akcjonariuszom niekontrolującym,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Zysk na 1 akcję podstawowy (w PLN),POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Zysk na 1 akcję rozwodniony (w PLN),POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,RZIS,Średnia ważona rozwodniona liczba akcji zwykłych,POMIN,1,1,PEWNE,NEU Q1 2026,sekcja innych calkowitych dochodow / EPS - poza zakresem standardu
+,CF,Zysk przed opodatkowaniem za rok obrotowy,POMIN,1,1,PEWNE,NEU Q1 2026,duplikat z RZiS
+,CF,Korekty:,POMIN,1,1,PEWNE,NEU Q1 2026,
+,CF,Zmiany w kapitale obrotowym:,POMIN,1,1,PEWNE,NEU Q1 2026,
+,CF,Zyski/straty z tytułu różnic kursowych,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Odsetki netto,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Odpisy aktualizujące aktywa ujęte w wyniku finansowym,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Zysk z działalności inwestycyjnej,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Koszt programu motywacyjnego,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Zmiana stanu rezerw i odpisów aktualizujących zapasy i należności,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Udział w stratach jednostek stowarzyszonych,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Inne korekty,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Korekty z tytułu aktywów netto nabytych jednostek zależnych,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Zmiana stanu aktywów ubezpieczeniowych,change_in_other_assets,1,1,WYSOKA,NEU Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Amortyzacja,amortization,1,1,PEWNE,NEU Q1 2026,
+,CF,Zmiana stanu zapasów brutto,change_in_inventories,1,1,PEWNE,NEU Q1 2026,
+,CF,Zmiana stanu należności handlowych oraz pozostałych brutto,change_in_receivables,1,1,PEWNE,NEU Q1 2026,
+,CF,Zmiana stanu zobowiązań handlowych oraz innych operacyjnych,change_in_payables,1,1,PEWNE,NEU Q1 2026,
+,CF,Zmiana stanu zobowiązań ubezpieczeniowych,change_in_payables,1,1,WYSOKA,NEU Q1 2026,
+,CF,Zmiana stanu rozliczeń z tytułu faktoringu należności,change_in_receivables,1,1,DO_WERYFIKACJI,NEU Q1 2026,faktoring - decyzja czy do naleznosci czy do dlugu
+,CF,Zmiana stanu rozliczeń z tytułu faktoringu zobowiązań,change_in_payables,1,1,DO_WERYFIKACJI,NEU Q1 2026,j.w.
+,CF,Zapłacony podatek dochodowy,change_in_other_assets,1,1,DO_WERYFIKACJI,NEU Q1 2026,brak klucza na podatek zaplacony w standardzie
+,CF,Przepływy z działalności operacyjnej przed zmianami w kapitale obrotowym,POMIN,1,1,PEWNE,NEU Q1 2026,suma posrednia
+,CF,Łącznie korekty zysku oraz zmiany kapitału obrotowego,POMIN,1,1,PEWNE,NEU Q1 2026,suma posrednia
+,CF,Środki pieniężne wygenerowane w toku działalności operacyjnej,POMIN,1,1,PEWNE,NEU Q1 2026,suma posrednia (przed podatkiem)
+,CF,Środki pieniężne z działalności operacyjnej (wykorzystane w działalności operacyjnej),operating_cashflow,1,1,PEWNE,NEU Q1 2026,
+,CF_INW,Wydatki na nabycie wartości niematerialnych oraz rzeczowych aktywów trwałych,capex,-1,1,PEWNE,NEU Q1 2026,
+,CF_INW,Wydatki na nabycie udziałów w jednostkach zależnych (pomniejszone o przejęte środki pieniężne),outflows_for_acquisitions,-1,1,PEWNE,NEU Q1 2026,
+,CF_INW,Otrzymane odsetki,proceed_bank_loans,1,1,WYSOKA,NEU Q1 2026,"UWAGA: klucz nazywa sie proceed_bank_loans, ale etykieta w standardzie to 'Odsetki otrzymane'"
+,CF_INW,Środki pieniężne z działalności inwestycyjnej (wykorzystane w działalności inwestycyjnej),investing_cashflow,1,1,PEWNE,NEU Q1 2026,
+,CF_INW,Wpływy ze sprzedaży wartości niematerialnych oraz rzeczowych aktywów trwałych,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Wpływy ze sprzedaży nieruchomości inwestycyjnych,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Wpływy ze sprzedaży instrumentów kapitałowych oraz instrumentów dłużnych,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Wydatki na nabycie instrumentów kapitałowych oraz instrumentów dłużnych,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Pożyczki udzielone jednostkom niepowiązanym,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Otrzymane spłaty pożyczek udzielonych od jednostek niepowiązanych,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_FIN,Wpływy netto z tytułu emisji akcji,share_capital_cash,1,1,PEWNE,NEU Q1 2026,
+,CF_FIN,Nabycie akcji własnych,change_in_bank_loans,-1,1,WYSOKA,NEU Q1 2026,UWAGA: klucz change_in_bank_loans ma w standardzie etykiete 'Skup akcji wlasnych'
+,CF_FIN,Spłata zobowiązań z tytułu praw do użytkowania,lease_liab_payments,-1,1,PEWNE,NEU Q1 2026,
+,CF_FIN,Odsetki zapłacone,repaid_bank_loans,-1,1,WYSOKA,NEU Q1 2026,klucz repaid_bank_loans = etykieta 'Odsetki zaplacone'
+,CF_FIN,Środki pieniężne z działalności finansowej (wykorzystane w działalności finansowej),financing_cashflow,1,1,PEWNE,NEU Q1 2026,
+,CF_FIN,Zmiana netto stanu środków pieniężnych i ich ekwiwalentów,net_cashflow,1,1,PEWNE,NEU Q1 2026,
+,CF_FIN,Wpływy z otrzymanych dotacji,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,Wpływy z tytułu zaciągnięcia kredytów i pożyczek,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,Spłaty kredytów i pożyczek,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,"Różnice kursowe otrzymane/(zapłacone) z instrumentów pochodnych ekonomicznie zabezpieczających zobowiązania finansowe, netto",POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,Pozostałe wpływy/wydatki,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,Zmiana stanu środków pieniężnych i ich ekwiwalentów przed skutkami zmian kursów wymiany,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,"Skutki zmian kursów wymiany, które dotyczą środków pieniężnych i ekwiwalentów środków pieniężnych",POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,Środki pieniężne i ich ekwiwalenty na początek okresu,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,Środki pieniężne i ich ekwiwalenty na koniec okresu,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,CF_FIN,- o ograniczonej możliwości dysponowania,POMIN,1,1,PEWNE,NEU Q1 2026,brak odpowiednika w standardzie
+,AKT_TRW,Rzeczowe aktywa trwałe,property,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Aktywa z tytułu prawa do użytkowania,property,1,1,PEWNE,NEU Q1 2026,POTWIERDZONE wzorcem: 553250+188778=742028 = property
+,AKT_TRW,Aktywa z tytułu prawa do użytkowania,right_to_use_assets,1,1,PEWNE,NEU Q1 2026,right_to_use_assets to pozycja 'w tym' - NIE sumuje sie do aktywow trwalych
+,AKT_TRW,Wartość firmy,goodwill,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Wartości niematerialne,other_intangible_assets,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Nieruchomości inwestycyjne,noncurrent_investments,1,1,DO_WERYFIKACJI,NEU Q1 2026,alternatywa: property. Standard nie ma osobnego klucza
+,AKT_TRW,Inwestycje długoterminowe w obligacje,noncurrent_investments,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Akcje i udziały notowane,noncurrent_investments,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Należności długoterminowe,noncurrent_receivables,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Udzielone pożyczki,noncurrent_investments,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Aktywa z tytułu odroczonego podatku dochodowego,other_noncurrent_assets,1,1,PEWNE,NEU Q1 2026,
+,AKT_TRW,Aktywa trwałe razem,noncurrent_assets,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Zapasy,inventory,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Należności handlowe oraz pozostałe należności,current_receivables,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Należności z tytułu bieżącego podatku dochodowego,current_receivables,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Udzielone pożyczki,current_investments,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Inne krótkoterminowe aktywa finansowe,current_investments,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Środki pieniężne i ich ekwiwalenty,cash,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Środki pieniężne i ich ekwiwalenty,current_investments,1,1,PEWNE,NEU Q1 2026,w standardzie inwestycje krotkoterminowe ZAWIERAJA srodki pieniezne
+,AKT_OBR,Instrumenty pochodne niewyznaczone do rachunkowości zabezpieczeń,current_investments,1,1,WYSOKA,NEU Q1 2026,
+,AKT_OBR,Aktywa obrotowe bez aktywów trwałych przeznaczonych do sprzedaży,POMIN,1,1,PEWNE,NEU Q1 2026,suma posrednia
+,AKT_OBR,Aktywa trwałe zaklasyfikowane jako przeznaczone do sprzedaży,assets_for_sale,1,1,PEWNE,NEU Q1 2026,
+,AKT_OBR,Aktywa obrotowe razem,current_assets,1,1,PEWNE,NEU Q1 2026,
+,AKTYWA,Aktywa razem,total_assets,1,1,PEWNE,NEU Q1 2026,
+,KAPITAL,Kapitał podstawowy,share_capital,1,1,PEWNE,NEU Q1 2026,
+,KAPITAL,Akcje własne,own_share,1,1,PEWNE,NEU Q1 2026,juz ze znakiem ujemnym w raporcie - standard tez oczekuje ujemnej
+,KAPITAL,Kapitał zapasowy ze sprzedaży akcji powyżej ich wartości nominalnej,reserve,1,1,PEWNE,NEU Q1 2026,
+,KAPITAL,Pozostałe kapitały,kapitaly_pozostale_nierozdzielone,1,1,PEWNE,NEU Q1 2026,POTWIERDZONE wzorcem NEU.xlsx: reserve = 426890 = tylko kapital zapasowy ze sprzedazy akcji
+,KAPITAL,Niepodzielony wynik finansowy i wynik finansowy roku obrotowego,retained_earnings,1,1,PEWNE,NEU Q1 2026,"POTWIERDZONE wzorcem NEU.xlsx: 768518 = CALA pozycja, bez odejmowania wyniku okresu"
+,KAPITAL,Kapitały przypadające akcjonariuszom jednostki dominującej,POMIN,1,1,PEWNE,NEU Q1 2026,suma posrednia
+,KAPITAL,Kapitały przypadające akcjonariuszom niekontrolującym,nonshare_capital,1,1,PEWNE,NEU Q1 2026,
+,KAPITAL,Kapitał własny razem,capital,1,1,PEWNE,NEU Q1 2026,
+,ZOB_DL,Zobowiązania z tytułu prawa do użytkowania,noncurrent_leasing,1,1,PEWNE,NEU Q1 2026,
+,ZOB_DL,Inne zobowiązania finansowe,noncurrent_other_liabilities,1,1,PEWNE,NEU Q1 2026,"POTWIERDZONE wzorcem: noncurrent_borrowings = 0, ta pozycja idzie w inne zobowiazania"
+,ZOB_DL,Zobowiązania z tytułu zakupu udziałów,noncurrent_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_DL,Rezerwy na zobowiązania z tytułu świadczeń pracowniczych,noncurrent_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_DL,Inne zobowiązania operacyjne,noncurrent_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_DL,Długoterminowe zobowiązania ubezpieczeniowe,noncurrent_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_DL,Zobowiązania długoterminowe razem,noncurrent_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Kredyty i pożyczki,current_borrowings,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Zobowiązania z tytułu faktoringu należności,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,POTWIERDZONE wzorcem NEU.xlsx I 2026: faktoring NIE wchodzi do current_borrowings
+,ZOB_KR,Zobowiązania z tytułu prawa do użytkowania,current_leasing,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Inne zobowiązania finansowe,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,POTWIERDZONE wzorcem: current_borrowings = wylacznie linia Kredyty i pozyczki
+,ZOB_KR,Zobowiązania z tytułu zakupu udziałów,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Zobowiązania handlowe oraz inne zobowiązania operacyjne,current_trade_payables,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Zobowiązania z tytułu bieżącego podatku dochodowego,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Rezerwy na zobowiązania z tytułu świadczeń pracowniczych,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Instrumenty pochodne niewyznaczone do rachunkowości zabezpieczeń,current_other_liabilities,1,1,WYSOKA,NEU Q1 2026,
+,ZOB_KR,Rezerwy na pozostałe zobowiązania,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Krótkoterminowe zobowiązania ubezpieczeniowe,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Zobowiązania krótkoterminowe bez zobowiązań wchodzących w skład grup przeznaczonych do sprzedaży,POMIN,1,1,PEWNE,NEU Q1 2026,suma posrednia
+,ZOB_KR,Zobowiązania wchodzące w skład grup przeznaczonych do sprzedaży,current_other_liabilities,1,1,PEWNE,NEU Q1 2026,
+,ZOB_KR,Zobowiązania krótkoterminowe razem,current_liabilities,1,1,PEWNE,NEU Q1 2026,
+,PASYWA,Zobowiązania razem,POMIN,1,1,PEWNE,NEU Q1 2026,suma posrednia
+,ZOB_KR,Zobowiązania razem,POMIN,1,1,PEWNE,NEU Q1 2026,j.w. - zaleznie od ukladu trafia do ZOB_KR albo PASYWA
+,PASYWA,Pasywa razem,total_equity_liabilities,1,1,PEWNE,NEU Q1 2026,
+,RZIS,Przychody z umów z klientami,revenues,1,1,PEWNE,KGH Q1 2026,
+,RZIS,Koszty sprzedaży i koszty ogólnego zarządu,administrative_expenses,-1,1,DO_WERYFIKACJI,KGH Q1 2026,KGHM nie rozdziela kosztow sprzedazy i zarzadu w raporcie kwartalnym - calosc trafia w koszty zarzadu; rozbicie jest w notach
+,RZIS,Zysk netto ze sprzedaży,POMIN,1,1,PEWNE,KGH Q1 2026,"to jest odpowiednik standardowego gross_profit, ale liczymy go regula z pozycji skladowych"
+,RZIS,Udział w zysku wspólnego przedsięwzięcia wycenianego metodą praw własności,POMIN,1,1,PEWNE,KGH Q1 2026,skladnik sumy 'Wynik z zaangazowania we wspolne przedsiewziecie'
+,RZIS,Zysk z tytułu odwrócenia utraty wartości pożyczek udzielonych wspólnemu przedsięwzięciu,POMIN,1,1,PEWNE,KGH Q1 2026,skladnik sumy jw.
+,RZIS,Przychody odsetkowe od pożyczek udzielonych wspólnemu przedsięwzięciu obliczone z zastosowaniem metody efektywnej stopy procentowej,POMIN,1,1,PEWNE,KGH Q1 2026,skladnik sumy jw. - NIE idzie w przychody finansowe
+,RZIS,Wynik z zaangażowania we wspólne przedsięwzięcie,other_operating_income,1,1,PEWNE,KGH Q1 2026,POTWIERDZONE wzorcem KGH.xlsx: 657+454=1111 = other_operating_income. Caly wynik z JV idzie w przychody OPERACYJNE
+,RZIS,"Pozostałe przychody operacyjne, w tym:",other_operating_income,1,1,PEWNE,KGH Q1 2026,
+,RZIS,pozostałe odsetki obliczone z zastosowaniem metody efektywnej stopy procentowej,POMIN,1,1,PEWNE,KGH Q1 2026,"pozycja 'w tym' - zawarta juz w wierszu nadrzednym, NIE liczyc drugi raz"
+,RZIS,"Pozostałe koszty operacyjne, w tym:",other_operating_costs,-1,1,PEWNE,KGH Q1 2026,
+,RZIS,straty z tytułu utraty wartości instrumentów finansowych,POMIN,1,1,PEWNE,KGH Q1 2026,pozycja 'w tym' - zawarta w wierszu nadrzednym
+,RZIS,Zysk netto przypadający: akcjonariuszom Jednostki Dominującej,shareholder_net_profit,1,1,PEWNE,KGH Q1 2026,j.w. - year_profit zostaje pusty
+,RZIS,Zysk netto przypadający: na udziały niekontrolujące,POMIN,1,1,PEWNE,KGH Q1 2026,
+,RZIS,Średnia ważona liczba akcji zwykłych (mln szt.),share_amount,1,1000,DO_WERYFIKACJI,KGH Q1 2026,raport podaje w mln szt.; waga 1000 przy mnozniku 1000 daje sztuki. Standard chce liczby akcji na dzien bilansowy
+,RZIS,Zysk na akcję podstawowy i rozwodniony (w PLN),POMIN,1,1,PEWNE,KGH Q1 2026,
+,CF,Zysk przed opodatkowaniem,POMIN,1,1,PEWNE,KGH Q1 2026,duplikat z RZiS - punkt wyjscia rachunku przeplywow
+,CF,Amortyzacja ujęta w wyniku finansowym,amortization,1,1,PEWNE,KGH Q1 2026,
+,CF,Udział w zysku wspólnego przedsięwzięcia wycenianego metodą praw własności,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Odsetki od pożyczek udzielonych wspólnemu przedsięwzięciu,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Pozostałe odsetki,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Straty z tytułu utraty wartości rzeczowych aktywów trwałych i wartości niematerialnych,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Zysk z tytułu odwrócenia utraty wartości pożyczek udzielonych wspólnemu przedsięwzięciu,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Zysk ze zbycia jednostek zależnych,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,"Różnice kursowe, z tego:",change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,"Zmiana stanu rezerw na likwidację kopalń, zobowiązań z tytułu programu przyszłych świadczeń pracowniczych oraz pozostałych rezerw",change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Zmiana stanu pozostałych należności i zobowiązań innych niż kapitał obrotowy,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Zmiana stanu aktywów i zobowiązań z tytułu instrumentów pochodnych,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Przekwalifikowanie pozostałych całkowitych dochodów do wyniku w związku z realizacją instrumentów pochodnych zabezpieczających,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,Pozostałe korekty,change_in_other_assets,1,1,WYSOKA,KGH Q1 2026,korekta zbiorcza -> 'Zmiana rezerw i pozostale'
+,CF,z działalności inwestycyjnej i wyceny środków pieniężnych,POMIN,1,1,PEWNE,KGH Q1 2026,rozwiniecie 'z tego' pozycji Roznice kursowe
+,CF,z działalności finansowej,POMIN,1,1,PEWNE,KGH Q1 2026,rozwiniecie 'z tego' pozycji Roznice kursowe
+,CF,Razem wyłączenia przychodów i kosztów,POMIN,1,1,PEWNE,KGH Q1 2026,suma posrednia korekt (zawiera juz amortyzacje)
+,CF,Podatek dochodowy zapłacony,change_in_other_assets,1,1,DO_WERYFIKACJI,KGH Q1 2026,brak klucza na podatek zaplacony w standardzie
+,CF,"Zmiana stanu kapitału obrotowego, w tym:",change_in_wc_nierozdzielony,1,1,DO_WERYFIKACJI,KGH Q1 2026,KGHM podaje kapital obrotowy JEDNA kwota - nie da sie rozbic na zapasy/naleznosci/zobowiazania
+,CF,zmiana stanu zobowiązań handlowych objętych mechanizmami faktoringu odwrotnego,POMIN,1,1,PEWNE,KGH Q1 2026,pozycja 'w tym'
+,CF,Przepływy pieniężne netto z działalności operacyjnej,operating_cashflow,1,1,PEWNE,KGH Q1 2026,
+,CF_INW,"Wydatki związane z aktywami górniczymi i hutniczymi, w tym:",capex,-1,1,PEWNE,KGH Q1 2026,
+,CF_INW,zapłacone aktywowane odsetki od zadłużenia,POMIN,1,1,PEWNE,KGH Q1 2026,pozycja 'w tym' wewnatrz CAPEX
+,CF_INW,Wydatki na pozostałe rzeczowe aktywa trwałe i wartości niematerialne,capex,-1,1,PEWNE,KGH Q1 2026,
+,CF_INW,Udzielone zaliczki na rzeczowe aktywa trwałe i wartości niematerialne,POMIN,1,1,PEWNE,KGH Q1 2026,"POTWIERDZONE wzorcem KGH.xlsx: capex 1418 = 1147+271, BEZ zaliczek"
+,CF_INW,Odsetki otrzymane z tytułu pożyczek udzielonych wspólnemu przedsięwzięciu,proceed_bank_loans,1,1,WYSOKA,KGH Q1 2026,klucz proceed_bank_loans = etykieta 'Odsetki otrzymane'
+,CF_INW,Przepływy pieniężne netto z działalności inwestycyjnej,investing_cashflow,1,1,PEWNE,KGH Q1 2026,
+,CF_INW,Wydatki na aktywa finansowe przeznaczone na likwidację kopalń i innych obiektów technologicznych,POMIN,1,1,PEWNE,KGH Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Wpływy z tytułu spłaty pożyczek udzielonych wspólnemu przedsięwzięciu (kapitał),POMIN,1,1,PEWNE,KGH Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Wpływy ze zbycia rzeczowych aktywów trwałych i wartości niematerialnych,POMIN,1,1,PEWNE,KGH Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Wpływy ze zbycia jednostek zależnych,POMIN,1,1,PEWNE,KGH Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_INW,Pozostałe,POMIN,1,1,PEWNE,KGH Q1 2026,brak odpowiednika - zawarte w investing_cashflow
+,CF_FIN,Spłata zobowiązań z tytułu leasingu,lease_liab_payments,-1,1,PEWNE,KGH Q1 2026,
+,CF_FIN,"Spłata odsetek, z tego:",repaid_bank_loans,-1,1,WYSOKA,KGH Q1 2026,klucz repaid_bank_loans = etykieta 'Odsetki zaplacone'
+,CF_FIN,od zobowiązań handlowych objętych mechanizmami faktoringu odwrotnego,POMIN,1,1,PEWNE,KGH Q1 2026,rozwiniecie 'z tego'
+,CF_FIN,z tytułu zadłużenia,POMIN,1,1,PEWNE,KGH Q1 2026,rozwiniecie 'z tego'
+,CF_FIN,Przepływy pieniężne netto z działalności finansowej,financing_cashflow,1,1,PEWNE,KGH Q1 2026,
+,CF_FIN,PRZEPŁYWY PIENIĘŻNE NETTO,net_cashflow,1,1,PEWNE,KGH Q1 2026,
+,CF_FIN,Wpływy z tytułu zaciągniętych kredytów i pożyczek,POMIN,1,1,WYSOKA,KGH Q1 2026,brak klucza w standardzie (m.in. zaciagniecie/splata kredytow!)
+,CF_FIN,Spłata kredytów i pożyczek,POMIN,1,1,WYSOKA,KGH Q1 2026,brak klucza w standardzie (m.in. zaciagniecie/splata kredytow!)
+,CF_FIN,Pozostałe,POMIN,1,1,WYSOKA,KGH Q1 2026,brak klucza w standardzie (m.in. zaciagniecie/splata kredytow!)
+,CF_FIN,Różnice kursowe,POMIN,1,1,WYSOKA,KGH Q1 2026,brak klucza w standardzie (m.in. zaciagniecie/splata kredytow!)
+,CF_FIN,Stan środków pieniężnych i ich ekwiwalentów na początek okresu,POMIN,1,1,WYSOKA,KGH Q1 2026,brak klucza w standardzie (m.in. zaciagniecie/splata kredytow!)
+,CF_FIN,"Stan środków pieniężnych i ich ekwiwalentów na koniec okresu, w tym:",POMIN,1,1,WYSOKA,KGH Q1 2026,brak klucza w standardzie (m.in. zaciagniecie/splata kredytow!)
+,CF_FIN,środki pieniężne o ograniczonej możliwości dysponowania,POMIN,1,1,WYSOKA,KGH Q1 2026,brak klucza w standardzie (m.in. zaciagniecie/splata kredytow!)
+,AKT_TRW,Rzeczowe aktywa trwałe górnicze i hutnicze,property,1,1,PEWNE,KGH Q1 2026,
+,AKT_TRW,Aktywa niematerialne górnicze i hutnicze,other_intangible_assets,1,1,PEWNE,KGH Q1 2026,
+,AKT_TRW,Rzeczowe i niematerialne aktywa górnicze i hutnicze,POMIN,1,1,PEWNE,KGH Q1 2026,suma posrednia dwoch pozycji powyzej
+,AKT_TRW,Pozostałe rzeczowe aktywa trwałe,property,1,1,PEWNE,KGH Q1 2026,
+,AKT_TRW,Pozostałe aktywa niematerialne,property,1,1,PEWNE,KGH Q1 2026,POTWIERDZONE wzorcem KGH.xlsx: intangible_assets = TYLKO aktywa niematerialne gornicze; pozostale ida w property
+,AKT_TRW,Pozostałe aktywa rzeczowe i niematerialne,POMIN,1,1,PEWNE,KGH Q1 2026,suma posrednia
+,AKT_TRW,Wspólne przedsięwzięcie wyceniane metodą praw własności,other_noncurrent_assets,1,1,PEWNE,KGH Q1 2026,POTWIERDZONE wzorcem KGH.xlsx: udzialy wyceniane metoda praw wlasnosci NIE ida w inwestycje dlugoterminowe
+,AKT_TRW,Pożyczki udzielone wspólnemu przedsięwzięciu,noncurrent_receivables,1,1,PEWNE,KGH Q1 2026,"POTWIERDZONE wzorcem KGH.xlsx: pozyczki dla JV = naleznosci dlugoterminowe, nie inwestycje"
+,AKT_TRW,Zaangażowanie we wspólne przedsięwzięcie,POMIN,1,1,PEWNE,KGH Q1 2026,suma posrednia
+,AKT_TRW,Pochodne instrumenty finansowe,noncurrent_investments,1,1,PEWNE,KGH Q1 2026,
+,AKT_TRW,Inne instrumenty finansowe wyceniane w wartości godziwej,noncurrent_investments,1,1,PEWNE,KGH Q1 2026,
+,AKT_TRW,Inne instrumenty finansowe wyceniane w zamortyzowanym koszcie,noncurrent_investments,1,1,PEWNE,KGH Q1 2026,
+,AKT_TRW,Instrumenty finansowe razem,POMIN,1,1,PEWNE,KGH Q1 2026,suma posrednia
+,AKT_TRW,Pozostałe aktywa niefinansowe,other_noncurrent_assets,1,1,PEWNE,KGH Q1 2026,
+,AKT_TRW,Aktywa trwałe,noncurrent_assets,1,1,PEWNE,KGH Q1 2026,"u KGHM to SUMA zamykajaca blok, nie naglowek"
+,AKT_OBR,"Należności od odbiorców, w tym:",current_receivables,1,1,PEWNE,KGH Q1 2026,
+,AKT_OBR,należności od odbiorców wyceniane w wartości godziwej przez wynik finansowy,POMIN,1,1,PEWNE,KGH Q1 2026,pozycja 'w tym'
+,AKT_OBR,Należności z tytułu podatków,current_receivables,1,1,PEWNE,KGH Q1 2026,
+,AKT_OBR,Pochodne instrumenty finansowe,current_investments,1,1,PEWNE,KGH Q1 2026,
+,AKT_OBR,Pozostałe aktywa finansowe,current_investments,1,1,PEWNE,KGH Q1 2026,
+,AKT_OBR,Pozostałe aktywa niefinansowe,other_current_assets,1,1,PEWNE,KGH Q1 2026,
+,AKT_OBR,Aktywa obrotowe,current_assets,1,1,PEWNE,KGH Q1 2026,suma zamykajaca blok
+,AKTYWA,RAZEM AKTYWA,total_assets,1,1,PEWNE,KGH Q1 2026,
+,KAPITAL,Kapitał akcyjny,share_capital,1,1,PEWNE,KGH Q1 2026,
+,KAPITAL,Kapitał z tytułu wyceny instrumentów finansowych,kapitaly_pozostale_nierozdzielone,1,1,PEWNE,KGH Q1 2026,POTWIERDZONE wzorcem KGH.xlsx: reserve = 0. Kapitaly z wyceny/OCI NIE sa ujmowane w rozbiciu kapitalu wlasnego
+,KAPITAL,Zakumulowane pozostałe całkowite dochody inne niż z tytułu wyceny instrumentów finansowych,kapitaly_pozostale_nierozdzielone,1,1,PEWNE,KGH Q1 2026,j.w. - pozycja OCI poza rozbiciem
+,KAPITAL,Zyski zatrzymane,retained_earnings,1,1,PEWNE,KGH Q1 2026,"POTWIERDZONE wzorcem KGH.xlsx: CALA pozycja idzie w retained_earnings, year_profit zostaje pusty"
+,KAPITAL,Kapitał własny akcjonariuszy Jednostki Dominującej,POMIN,1,1,PEWNE,KGH Q1 2026,suma posrednia
+,KAPITAL,Kapitał własny udziałowców niekontrolujących,nonshare_capital,1,1,PEWNE,KGH Q1 2026,
+,KAPITAL,Kapitał własny,capital,1,1,PEWNE,KGH Q1 2026,suma zamykajaca blok
+,ZOB_DL,"Zobowiązania z tytułu kredytów, pożyczek oraz leasingu",noncurrent_borrowings,1,1,DO_WERYFIKACJI,KGH Q1 2026,KGHM laczy kredyty z leasingiem; standard ma osobny klucz noncurrent_leasing
+,ZOB_DL,Zobowiązania z tytułu dłużnych papierów wartościowych,noncurrent_obligations,1,1,PEWNE,KGH Q1 2026,
+,ZOB_DL,Pochodne instrumenty finansowe,noncurrent_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_DL,Zobowiązania z tytułu świadczeń pracowniczych,noncurrent_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_DL,Rezerwy na koszty likwidacji kopalń i innych obiektów technologicznych,noncurrent_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_DL,Zobowiązania z tytułu odroczonego podatku dochodowego,noncurrent_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_DL,Pozostałe zobowiązania,noncurrent_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_DL,Zobowiązania długoterminowe,noncurrent_liabilities,1,1,PEWNE,KGH Q1 2026,suma zamykajaca blok
+,ZOB_KR,"Zobowiązania z tytułu kredytów, pożyczek oraz leasingu",current_borrowings,1,1,DO_WERYFIKACJI,KGH Q1 2026,j.w. - kredyty razem z leasingiem
+,ZOB_KR,Zobowiązania z tytułu dłużnych papierów wartościowych,current_obligations,1,1,PEWNE,KGH Q1 2026,
+,ZOB_KR,Pochodne instrumenty finansowe,current_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_KR,Zobowiązania wobec dostawców i pozostałe,current_trade_payables,1,1,PEWNE,KGH Q1 2026,
+,ZOB_KR,Zobowiązania z tytułu świadczeń pracowniczych,current_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_KR,Zobowiązania z tytułu podatków,current_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_KR,Rezerwy na zobowiązania i inne obciążenia,current_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_KR,Pozostałe zobowiązania,current_other_liabilities,1,1,PEWNE,KGH Q1 2026,
+,ZOB_KR,Zobowiązania krótkoterminowe,current_liabilities,1,1,PEWNE,KGH Q1 2026,suma zamykajaca blok
+,PASYWA,Zobowiązanie długo i krótkoterminowe,POMIN,1,1,PEWNE,KGH Q1 2026,suma posrednia
+,PASYWA,RAZEM ZOBOWIĄZANIA I KAPITAŁ WŁASNY,total_equity_liabilities,1,1,PEWNE,KGH Q1 2026,
+,*,⚠️ UWAGA: koszty w tym sprawozdaniu mogą być podane jako liczby DODATNIE (bez znaku minus) — sprawdź konwencję znaków przed sumowaniem/analizą tych danych.,POMIN,1,1,PEWNE,AOL Q1 2026,"komentarz w pliku, nie pozycja sprawozdania"
+,RZIS,A. Przychody netto ze sprzedaży i zrównane z nimi,revenues,1,1,PEWNE,AOL Q1 2026,
+,RZIS,- w tym od jednostek powiązanych nieobjętych metodą konsolidacji pełnej,POMIN,1,1,PEWNE,AOL Q1 2026,pozycja 'w tym'
+,RZIS,I. Przychody netto ze sprzedaży produktów,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji A
+,RZIS,B. Koszty działalności operacyjnej,cost_of_sales,1,1,PEWNE,AOL Q1 2026,"POTWIERDZONE wzorcem AOL.xlsx: w wariancie porownawczym CALOSC kosztow operacyjnych idzie w cost_of_sales, a koszty sprzedazy i zarzadu zostaja PUSTE"
+,RZIS,I. Amortyzacja,POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,II. Zużycie materiałów i energii,POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,III. Usługi obce,POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,"IV. Podatki i opłaty, w tym:",POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,- podatek akcyzowy,POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,V. Wynagrodzenia,POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,"VI. Ubezpieczenia społeczne i inne świadczenia, w tym:",POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,- emerytalne,POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,VII. Pozostałe koszty rodzajowe,POMIN,1,1,PEWNE,AOL Q1 2026,"uklad rodzajowy - rozwiniecie pozycji B, NIE liczyc osobno"
+,RZIS,C. Zysk (strata) ze sprzedaży (A-B),POMIN,1,1,PEWNE,AOL Q1 2026,"gross_profit liczony regula z zaokraglonych skladnikow (3458-2661=797, a nie 796)"
+,RZIS,D. Pozostałe przychody operacyjne,other_operating_income,1,1,PEWNE,AOL Q1 2026,
+,RZIS,I. Zysk z tytułu rozchodu niefinansowych aktywów trwałych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie D
+,RZIS,II. Inne przychody operacyjne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie D
+,RZIS,E. Pozostałe koszty operacyjne,other_operating_costs,1,1,PEWNE,AOL Q1 2026,
+,RZIS,I. Strata ze zbycia niefinansowych aktywów trwałych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie E
+,RZIS,II. Inne koszty operacyjne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie E
+,RZIS,F. Zysk (strata) z działalności operacyjnej (C+D-E),ebit,1,1,PEWNE,AOL Q1 2026,
+,RZIS,G. Przychody finansowe,finance_income,1,1,PEWNE,AOL Q1 2026,
+,RZIS,H. Koszty finansowe,finance_costs,1,1,PEWNE,AOL Q1 2026,
+,RZIS,"I. Odsetki, w tym:",POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,- od jednostek powiązanych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,- dla jednostek powiązanych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,II. Zysk ze zbycia inwestycji,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,III. Aktualizacja wartości aktywów finansowych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,IV. Inne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,"II. Strata z tytułu rozchodu aktywów finansowych, w tym:",POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,- w jednostkach powiązanych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przychodow/kosztow finansowych
+,RZIS,I. Zysk (strata) z działalności gospodarczej (F+G-H),net_gross_profit,1,1,PEWNE,AOL Q1 2026,
+,RZIS,J. Odpis wartości firmy,POMIN,1,1,WYSOKA,AOL Q1 2026,brak klucza w standardzie
+,RZIS,K. Zysk (strata) brutto (I-J),before_tax_profit,1,1,PEWNE,AOL Q1 2026,
+,RZIS,L. Podatek dochodowy,POMIN,1,1,PEWNE,AOL Q1 2026,standard nie ma klucza na podatek
+,RZIS,M. Pozostałe obowiązkowe zmniejszenia zysku (zwiększenia straty),POMIN,1,1,PEWNE,AOL Q1 2026,
+,RZIS,N. Zysk (strata) netto (K-L-M),net_profit,1,1,PEWNE,AOL Q1 2026,
+,RZIS,N. Zysk (strata) netto (K-L-M),shareholder_net_profit,1,1,PEWNE,AOL Q1 2026,brak udzialow niekontrolujacych w jednostkowym UoR
+,CF,A. Przepływy środków pieniężnych z działalności operacyjnej,POMIN,1,1,PEWNE,AOL Q1 2026,powtorzenie pozycji A.III
+,CF,I. Zysk (strata) netto,POMIN,1,1,PEWNE,AOL Q1 2026,punkt wyjscia - juz w RZiS
+,CF,II. Korekty razem,POMIN,1,1,PEWNE,AOL Q1 2026,suma posrednia
+,CF,1. Amortyzacja,amortization,1,1,PEWNE,AOL Q1 2026,
+,CF,6. Zmiana stanu zapasów,change_in_inventories,1,1,PEWNE,AOL Q1 2026,
+,CF,7. Zmiana stanu należności,change_in_receivables,1,1,PEWNE,AOL Q1 2026,
+,CF,"8. Zmiana stanu zobowiązań krótkoterminowych, z wyjątkiem pożyczek i kredytów",change_in_payables,1,1,PEWNE,AOL Q1 2026,
+,CF,2. Zyski (straty) z tytułu różnic kursowych,change_in_other_assets,1,1,WYSOKA,AOL Q1 2026,korekta zbiorcza
+,CF,3. Odsetki i udziały w zyskach (dywidendy),change_in_other_assets,1,1,WYSOKA,AOL Q1 2026,korekta zbiorcza
+,CF,4. Zysk (strata) z działalności inwestycyjnej,change_in_other_assets,1,1,WYSOKA,AOL Q1 2026,korekta zbiorcza
+,CF,5. Zmiana stanu rezerw,change_in_other_assets,1,1,WYSOKA,AOL Q1 2026,korekta zbiorcza
+,CF,9. Zmiana stanu rozliczeń międzyokresowych,change_in_other_assets,1,1,WYSOKA,AOL Q1 2026,korekta zbiorcza
+,CF,10. Inne korekty z działalności operacyjnej,change_in_other_assets,1,1,WYSOKA,AOL Q1 2026,korekta zbiorcza
+,CF,III. Przepływy pieniężne netto z działal. operacyjnej (I±II),operating_cashflow,1,1,PEWNE,AOL Q1 2026,
+,CF_FIN,D. Przepływy pieniężne netto razem (A.III±B.III±C.III),net_cashflow,1,1,PEWNE,AOL Q1 2026,
+,CF_FIN,"E. Bilansowa zmiana stanu środków pieniężnych, w tym",POMIN,1,1,PEWNE,AOL Q1 2026,stany srodkow pienieznych - poza zakresem standardu
+,CF_FIN,- zmiana stanu środków pieniężnych z tyt. różnic kurs.,POMIN,1,1,PEWNE,AOL Q1 2026,stany srodkow pienieznych - poza zakresem standardu
+,CF_FIN,F. Środki pieniężne na początek okresu,POMIN,1,1,PEWNE,AOL Q1 2026,stany srodkow pienieznych - poza zakresem standardu
+,CF_FIN,"G. Środki pieniężne na koniec okresu (F±D), w tym:",POMIN,1,1,PEWNE,AOL Q1 2026,stany srodkow pienieznych - poza zakresem standardu
+,CF_INW,B. Przepływy środków pieniężnych z działal. inwest.,POMIN,1,1,PEWNE,AOL Q1 2026,powtorzenie B.III
+,CF_INW,1. Nabycie wartości niematerialnych i prawnych oraz rzeczowych aktywów trwałych,capex,1,1,PEWNE,AOL Q1 2026,
+,CF_INW,- odsetki,proceed_bank_loans,1,1,WYSOKA,AOL Q1 2026,klucz proceed_bank_loans = etykieta 'Odsetki otrzymane'
+,CF_INW,III. Przepływy pieniężne netto z działalności inwestycyjnej (I-II),investing_cashflow,1,1,PEWNE,AOL Q1 2026,
+,CF_INW,I. Wpływy,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow inwestycyjnych
+,CF_INW,II. Wydatki,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow inwestycyjnych
+,CF_INW,1. Zbycie wartości niematerialnych i prawnych oraz rzeczowych aktywów trwałych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow inwestycyjnych
+,CF_INW,"2. Z aktywów finansowych, w tym:",POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow inwestycyjnych
+,CF_INW,b) w pozostałych jednostkach,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow inwestycyjnych
+,CF_FIN,C. Przepływy środków pieniężnych z działalności finansowej,POMIN,1,1,PEWNE,AOL Q1 2026,powtorzenie C.III
+,CF_FIN,1. Wpływy netto z wydania udziałów (emisji akcji) i innych instrum. kapit. oraz dopłat do kapitału,share_capital_cash,1,1,PEWNE,AOL Q1 2026,
+,CF_FIN,1. Dywidendy i inne wypłaty na rzecz właścicieli,dividend,1,1,PEWNE,AOL Q1 2026,
+,CF_FIN,III. Przepływy pieniężne netto z działalności finansowej (I-II),financing_cashflow,1,1,PEWNE,AOL Q1 2026,
+,CF_FIN,I. Wpływy,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow finansowych
+,CF_FIN,II. Wydatki,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow finansowych
+,CF_FIN,2. Inne wpływy finansowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow finansowych
+,CF_FIN,2. Z tytułu innych zobowiązań finansowych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow finansowych
+,CF_FIN,3. Inne wydatki finansowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie przeplywow finansowych
+,AKT_TRW,A. Aktywa trwałe,noncurrent_assets,1,1,PEWNE,AOL Q1 2026,
+,AKT_TRW,I. Wartości niematerialne i prawne,other_intangible_assets,1,1,PEWNE,AOL Q1 2026,
+,AKT_TRW,II. Rzeczowe aktywa trwałe,property,1,1,PEWNE,AOL Q1 2026,
+,AKT_TRW,III. Należności długoterminowe,noncurrent_receivables,1,1,PEWNE,AOL Q1 2026,
+,AKT_TRW,IV. Inwestycje długoterminowe,noncurrent_investments,1,1,PEWNE,AOL Q1 2026,
+,AKT_TRW,V. Długoterminowe rozliczenia międzyokresowe,other_noncurrent_assets,1,1,PEWNE,AOL Q1 2026,
+,AKT_TRW,1. Koszty zakończonych prac rozwojowych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,2. Inne wartości niematerialne i prawne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,1. Środki trwałe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,"a) budynki, lokale i obiekty inżynierii lądowej i wodnej",POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,b) urządzenia techniczne i maszyny,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,c) środki transportu,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,d) inne środki trwałe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,1. Od pozostałych jednostek,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,1. Długoterminowe aktywa finansowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,a) w jednostkach powiązanych,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,- udziały i akcje,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,1. Aktywa z tytułu odroczonego podatku dochodowego,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_TRW,2. Inne rozliczenia międzyokresowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,B. Aktywa obrotowe,current_assets,1,1,PEWNE,AOL Q1 2026,
+,AKT_OBR,I. Zapasy,inventory,1,1,PEWNE,AOL Q1 2026,
+,AKT_OBR,II. Należności krótkoterminowe,current_receivables,1,1,PEWNE,AOL Q1 2026,
+,AKT_OBR,III. Inwestycje krótkoterminowe,current_investments,1,1,PEWNE,AOL Q1 2026,
+,AKT_OBR,b) środki pieniężne i inne aktywa pieniężne,cash,1,1,PEWNE,AOL Q1 2026,w standardzie inwestycje krotkoterminowe ZAWIERAJA srodki pieniezne
+,AKT_OBR,IV. Krótkoterminowe rozliczenia międzyokresowe,other_current_assets,1,1,PEWNE,AOL Q1 2026,
+,AKT_OBR,1. Zaliczki na dostawy i usługi,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,1. Należności od pozostałych jednostek,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,"a) z tytułu dostaw i usług, o okresie spłaty:",POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,- do 12 miesięcy,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,- powyżej 12 miesięcy,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,"b) z tytułu podatków, dotacji, ceł, ubezpieczeń społecznych i zdrowotnych oraz innych świadczeń",POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,c) inne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,1. Krótkoterminowe aktywa finansowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,a) w pozostałych jednostkach,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,- inne papiery wartościowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,- udzielone pożyczki,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,- środki pieniężne w kasie i na rachunkach,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,- inne środki pieniężne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,C. Należne wpłaty na kapitał (fundusz) podstawowy,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,AKT_OBR,D. Udziały (akcje) własne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie pozycji nadrzednej
+,KAPITAL,A. Kapitał własny,capital,1,1,PEWNE,AOL Q1 2026,
+,KAPITAL,I. Kapitał podstawowy,share_capital,1,1,PEWNE,AOL Q1 2026,
+,KAPITAL,II. Kapitał zapasowy,reserve,1,1,PEWNE,AOL Q1 2026,
+,KAPITAL,III. Pozostałe kapitały rezerwowe,kapitaly_pozostale_nierozdzielone,1,1,PEWNE,AOL Q1 2026,"POTWIERDZONE wzorcem: kapitaly rezerwowe poza rozbiciem, jak OCI u spolek MSSF"
+,KAPITAL,IV. Zysk (strata) z lat ubiegłych,retained_earnings,1,1,PEWNE,AOL Q1 2026,
+,KAPITAL,V. Zysk (strata) netto,year_profit,1,1,PEWNE,AOL Q1 2026,"UoR rozdziela wynik okresu od lat ubieglych, wiec year_profit JEST wypelniany (inaczej niz u MSSF)"
+,PASYWA,B. Zobowiązania i rezerwy na zobowiązania,POMIN,1,1,PEWNE,AOL Q1 2026,suma posrednia
+,PASYWA,I. Rezerwy na zobowiązania,reckoning,1,1,PEWNE,AOL Q1 2026,POTWIERDZONE wzorcem AOL.xlsx: reckoning = rezerwy + rozliczenia miedzyokresowe (337+152=490)
+,PASYWA,1. Rezerwa z tytułu odroczonego podatku dochodowego,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie rezerw
+,PASYWA,2. Rezerwa na świadczenia emerytalne i podobne,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie rezerw
+,PASYWA,- krótkoterminowa,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie rezerw
+,PASYWA,- długoterminowa,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie rezerw
+,PASYWA,3. Pozostałe rezerwy,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie rezerw
+,PASYWA,- krótkoterminowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie rezerw
+,ZOB_DL,II. Zobowiązania długoterminowe,noncurrent_liabilities,1,1,PEWNE,AOL Q1 2026,
+,ZOB_DL,1. Wobec pozostałych jednostek,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie zobowiazan dlugoterminowych
+,ZOB_DL,a) kredyty i pożyczki,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie zobowiazan dlugoterminowych
+,ZOB_DL,b) inne zobowiązania finansowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie zobowiazan dlugoterminowych
+,ZOB_KR,III. Zobowiązania krótkoterminowe,current_liabilities,1,1,PEWNE,AOL Q1 2026,
+,ZOB_KR,a) kredyty i pożyczki,current_borrowings,1,1,PEWNE,AOL Q1 2026,
+,ZOB_KR,"c) z tytułu dostaw i usług, o okresie wymagalności:",current_trade_payables,1,1,PEWNE,AOL Q1 2026,
+,ZOB_KR,"d) z tytułu podatków, ceł, ubezpieczeń i innych świadczeń",current_other_liabilities,1,1,PEWNE,AOL Q1 2026,
+,ZOB_KR,e) z tytułu wynagrodzeń,current_other_liabilities,1,1,PEWNE,AOL Q1 2026,
+,ZOB_KR,f) inne,current_other_liabilities,1,1,PEWNE,AOL Q1 2026,
+,ZOB_KR,IV. Rozliczenia międzyokresowe,reckoning,1,1,PEWNE,AOL Q1 2026,
+,ZOB_KR,b) inne zobowiązania finansowe,current_other_liabilities,1,1,WYSOKA,AOL Q1 2026,jak u Neuki: inne zobowiazania finansowe nie sa dlugiem
+,ZOB_KR,1. Wobec pozostałych jednostek,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie zobowiazan krotkoterminowych
+,ZOB_KR,- do 12 miesięcy,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie zobowiazan krotkoterminowych
+,ZOB_KR,1. Inne rozliczenia międzyokresowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie zobowiazan krotkoterminowych
+,ZOB_KR,- krótkoterminowe,POMIN,1,1,PEWNE,AOL Q1 2026,rozwiniecie zobowiazan krotkoterminowych

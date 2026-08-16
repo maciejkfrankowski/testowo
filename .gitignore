@@ -1,0 +1,18 @@
+# wyniki dzialania programu - generowane, nie wersjonujemy
+wynik_*.xlsx
+porownanie_*.xlsx
+propozycja_*.xlsx
+
+# pliki tymczasowe Excela
+~$*.xlsx
+*.tmp
+
+# dane spolek - sprawozdania i pliki wzorcowe trzymaj POZA repozytorium
+# (odkomentuj, jesli repo ma byc publiczne)
+# *.xlsx
+# !slownik.xlsx
+
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
