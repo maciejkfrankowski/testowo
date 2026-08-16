@@ -1,0 +1,36 @@
+name: Kontrola slownika
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  spojnosc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalacja zaleznosci
+        run: pip install -r requirements.txt
+
+      - name: Czy moduly sie importuja
+        run: python -c "import brmap, start; print('import OK')"
+
+      - name: Spojnosc slownika
+        run: python test_slownik.py
+
+      - name: Czy eksport CSV jest aktualny
+        run: |
+          python slownik_csv.py
+          if [ -n "$(git status --porcelain slownik_csv/)" ]; then
+            echo "::warning::slownik_csv/ nie zgadza sie ze slownik.xlsx - uruchom 'python slownik_csv.py' i dodaj do commita"
+            git --no-pager diff --stat slownik_csv/
+          else
+            echo "slownik_csv/ aktualny"
+          fi
