@@ -74,5 +74,5 @@ dividend,Dywidenda,CF
 net_cashflow,Przepływy pieniężne razem,CF
 balance_date,Data bilansowa,META
 raport_date,Data raportu,META
-share_amount,Liczba akcji,META
+share_amount,Liczba akcji,?
 currency_id,Waluta,META

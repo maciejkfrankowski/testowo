@@ -27,6 +27,8 @@ bledy, ostrzezenia = [], []
 def sprawdz():
     sl = brmap.load_slownik(SLOWNIK)
     klucze = {str(k.get("standard_key")).strip() for k in sl["klucze"] if k.get("standard_key")}
+    # szablon bankowy ma wlasny zestaw kluczy - oba sa poprawnymi celami
+    klucze |= {str(k.get("standard_key")).strip() for k in sl.get("klucze_b", []) if k.get("standard_key")}
     dozwolone = klucze | POMOCNICZE | SPECJALNE
 
     # --- 1. aliasy wskazuja na istniejace klucze ---
@@ -100,7 +102,7 @@ def sprawdz():
                 bledy.append(f"Spolki w.{i} ({tick}): znacznik bez '=>': {para[:45]}")
 
     print(f"Slownik: {os.path.basename(SLOWNIK)}")
-    print(f"  kluczy standardu : {len(klucze)}")
+    print(f"  kluczy standardu : {len(klucze)}  (w tym bankowe: {len(sl.get('klucze_b', []))})")
     print(f"  aliasow          : {len(sl['aliasy'])}")
     print(f"  regul            : {len(sl['reguly'])}")
     print(f"  spolek           : {len(sl['spolki'])}")

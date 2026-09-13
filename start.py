@@ -136,12 +136,12 @@ def wczytaj_konfiguracje(ticker):
     return sl, cfg
 
 
-def uruchom_mapowanie(ticker, plik, wzorzec, cfg):
+def uruchom_mapowanie(ticker, plik, wzorzec, cfg, okresy=None):
     """Mapuje i - jesli podano wzorzec - porownuje. Zwraca sciezke do wyniku."""
     mnoznik = float(cfg.get("mnoznik") or 1)
     tol = 2.0 if mnoznik < 1 else 1.0
 
-    daty = daty_z_naglowkow(cfg.get("naglowki_okresow"))
+    daty = daty_z_naglowkow("|".join(okresy) if okresy else cfg.get("naglowki_okresow"))
     prev = None
     if len(daty) >= 2 and daty[0] and daty[1]:
         odstep = (daty[0] - daty[1]).days
@@ -162,7 +162,8 @@ def uruchom_mapowanie(ticker, plik, wzorzec, cfg):
                 print("   Bez pliku wzorcowego kapital obrotowy bedzie wziety z przeplywow spolki.")
 
     naglowek(f"MAPOWANIE {ticker}")
-    out, wyniki, walid, niezmapowane = brmap.mapuj(SLOWNIK, ticker, plik, bilans_poprzedni=prev)
+    out, wyniki, walid, niezmapowane = brmap.mapuj(SLOWNIK, ticker, plik,
+                                                   bilans_poprzedni=prev, okresy=okresy)
 
     if wzorzec:
         naglowek("POROWNANIE ZE WZORCEM")
@@ -193,7 +194,11 @@ def main(folder=None):
 
     if not os.path.exists(SLOWNIK):
         print(f"\nBRAK PLIKU {SLOWNIK} w tym folderze.")
-        print("Wgraj slownik do tego samego katalogu co start.py i uruchom ponownie.")
+        if os.path.isdir("slownik_csv"):
+            print("Sa za to CSV-ki. Odtworz z nich slownik:")
+            print(f"   {sys.executable} slownik_z_csv.py")
+        else:
+            print("Wgraj slownik do tego samego katalogu co start.py i uruchom ponownie.")
         return
     sl = brmap.load_slownik(SLOWNIK)
     znane = [str(s.get("spolka")).strip() for s in sl["spolki"] if s.get("spolka")]
@@ -235,6 +240,7 @@ def main(folder=None):
         print("-" * 68)
         pytaj("\nGdy zapiszesz slownik, wcisnij Enter zeby zmapowac... ")
 
+    okresy = None
     while True:
         sl, cfg = wczytaj_konfiguracje(ticker)
         if cfg is None:
@@ -243,8 +249,16 @@ def main(folder=None):
                 return
             continue
 
+        if okresy is None:
+            # Ta sama spolka sklada raporty za rozne okresy w identycznym ukladzie.
+            # Kod spolki jest kluczem wyjatkow, wiec NIE zakladamy drugiego kodu tylko
+            # po to, zeby zmienic podpisy kolumn - podajemy je tutaj.
+            print(f"\nOkresy ze slownika: {cfg.get('naglowki_okresow')}")
+            podane = pytaj("Inne okresy? (rozdziel '|', Enter = zostaw): ")
+            okresy = [x.strip() for x in podane.split("|") if x.strip()] if podane else []
+
         try:
-            out, niezmapowane = uruchom_mapowanie(ticker, plik, wzorzec, cfg)
+            out, niezmapowane = uruchom_mapowanie(ticker, plik, wzorzec, cfg, okresy or None)
         except BrakWejscia:
             raise
         except Exception as e:

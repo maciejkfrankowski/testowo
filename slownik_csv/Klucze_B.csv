@@ -1,0 +1,75 @@
+standard_key,etykieta_pl,sekcja
+total_assets,Aktywa ogółem,BILANS_AKTYWA
+total_equity_liabilities,Pasywa ogółem,BILANS_PASYWA
+cash_and_balances_with_the_central_bank,Gotówka i operacje z bankami centralnymi,BILANS_AKTYWA
+loans_to_banks,Należności od banków,BILANS_AKTYWA
+financial_assets_held_for_trading,Aktywa finansowe przeznaczone do obrotu,BILANS_AKTYWA
+held_to_maturity_financial_assets,Pochodne instrumenty zabezpieczające,BILANS_AKTYWA
+loans_to_customers,Należności od klientów,BILANS_AKTYWA
+other_financial_assets,Inwestycyjne aktywa finansowe,BILANS_AKTYWA
+investments_in_subsidiaries,Inwestycje w podmioty stowarzyszone,BILANS_AKTYWA
+intangible_assets,Wartości niematerialne,BILANS_AKTYWA
+goodwill,Wartość firmy,BILANS_AKTYWA
+other_intangible_assets,Pozostałe wartości niematerialne,BILANS_AKTYWA
+property,Rzeczowy majątek trwały,BILANS_AKTYWA
+tax_assets,Aktywa z tytułu odroczonego podatku doch. netto,BILANS_AKTYWA
+other_assets,Pozostałe aktywa,BILANS_AKTYWA
+liabilities_due_to_the_central_bank,Zobowiązania wobec banku centralnego,BILANS_PASYWA
+liabilities_due_to_banks,Zobowiązania wobec banków,BILANS_PASYWA
+held_to_maturity_financial_liabilities,Pochodne instrumenty zabezpieczające,BILANS_PASYWA
+financial_liabilities_held_for_trading,Zobowiązania finansowe przeznaczone do obrotu,BILANS_PASYWA
+liabilities_due_to_customers,Zobowiązania wobec klientów,BILANS_PASYWA
+debt_securities,Zobowiązania z tytułu emisji dłużnych pap. wart.,BILANS_PASYWA
+subordinated_liabilities,Zobowiązania podporządkowane,BILANS_PASYWA
+tax_liabilities,Zobowiązania z tytułu podatku dochodowego,BILANS_PASYWA
+other_liabilities,Pozostałe pasywa,BILANS_PASYWA
+total_liabilities,Zobowiązania razem,BILANS_PASYWA
+own_capital,Kapitał własny przypisany akcjonariuszom Banku,BILANS_PASYWA
+share_capital,Kapitał akcyjny,BILANS_PASYWA
+share_premium,Pozostałe kapitały,BILANS_PASYWA
+own_share,Akcje własne,BILANS_PASYWA
+revaluation_reserves,Kapitał z aktualizacji wyceny,BILANS_PASYWA
+retained_earnings,Zyski zatrzymane,BILANS_PASYWA
+year_profit,Wynik roku bieżącego,BILANS_PASYWA
+non_control_profit,Udziały niekontrolujące,BILANS_PASYWA
+total_capital,Kapitały razem,BILANS_PASYWA
+interest_income,Przychody odsetkowe,RZIS
+interest_expense,Koszty odsetkowe,RZIS
+net_interest_income,Wynik z tytułu odsetek,RZIS
+fee_income,Przychody prowizyjne,RZIS
+fee_expense,Koszty prowizyjne,RZIS
+net_fee_income,Wynik z tytułu prowizji,RZIS
+dividend_income,Przychody z tytułu dywidend,RZIS
+realised_gains,Wynik handlowy i rewaluacja,RZIS
+net_other_financial_income,Wynik na pozostałych instrumentach finansowych,RZIS
+net_other_operating_income,Pozostałe przychody operacyjne,RZIS
+impairment_losses,Odpisy z tytułu utraty wartości nal. kredytowych,RZIS
+administration_costs,Ogólne koszty administracyjne,RZIS
+net_other_operating_costs,Pozostałe koszty operacyjne,RZIS
+net_operating_profit,Wynik operacyjny,RZIS
+bank_tax,Podatek od instytucji finansowych,RZIS
+related_income,Udział w zyskach jednostek podporządkowanych,RZIS
+beforetax_profit,Zysk przed opodatkowaniem,RZIS
+discontinued_profit,Zysk (strata) netto z działalności zaniechanej,RZIS
+net_profit,Zysk netto,RZIS
+shareholder_net_profit,Zysk netto akcjonariuszy jednostki dominującej,RZIS
+operating_cashflow,Przepływy pienięzne z działalności operacyjnej,CF
+amortization,Amortyzacja,CF
+change_in_receivables,Zmiana stanu należności,CF
+change_in_inventories,Zmiana stanu zapasów,CF
+change_in_payables,Zmaina stanu zobowiązań,CF
+change_in_other_assets,Zmiana rezerw i pozostałe,CF
+change_in_working_capital,Zmiana kapitału obrotowego,CF
+investing_cashflow,Przepływy pienięzne z działalności inwestycyjnej,CF
+capex,CAPEX (niematerialne i rzeczowe),CF
+financing_cashflow,Przepływy pienięzne z działalności finansowej,CF
+share_capital_cash,Emisja akcji,CF
+proceed_bank_loans,Odsetki otrzymane,CF
+repaid_bank_loans,Odsetki zapłacone,CF
+change_in_bank_loans,Skup akcji własnych,CF
+dividend,Dywidenda,CF
+net_cashflow,Przepływy pienięzne razem,CF
+balance_date,Data bilansowa,META
+raport_date,Data raportu,META
+share_amount,Liczba akcji,META
+currency_id,Waluta,META

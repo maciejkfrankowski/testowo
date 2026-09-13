@@ -1,5 +1,11 @@
 kolejnosc,standard_key,formula,tylko_gdy_brak,uwagi
-1,intangible_assets,goodwill + other_intangible_assets,NIE,Standard: WNiP ogolem = wartosc firmy + pozostale WNiP
+1,intangible_assets,goodwill + other_intangible_assets,TAK,Standard: WNiP ogolem = wartosc firmy + pozostale WNiP
 2,gross_profit,revenues - cost_of_sales - distribution_expenses - administrative_expenses,NIE,UWAGA: standardowy 'Zysk ze sprzedazy' to NIE jest 'Zysk brutto ze sprzedazy' z raportu spolki
+3,net_operating_profit,net_interest_income + net_fee_income + dividend_income + realised_gains + net_other_financial_income + net_other_operating_income + impairment_losses + administration_costs + net_other_operating_costs + bank_tax,TAK,Szablon BANKOWY: wynik operacyjny nie jest raportowany wprost. Koszty sa juz ujemne. POTWIERDZONE wzorcem MIL: podatek bankowy wchodzi DO wyniku operacyjnego
 3,ebit,gross_profit + other_operating_income - other_operating_costs,TAK,"Regula WARUNKOWA: liczona tylko gdy spolka nie pokazuje linii EBIT (KGHM idzie od zysku ze sprzedazy prosto do zysku przed opodatkowaniem). Gdy spolka podaje EBIT wprost (Neuca), zostaje wartosc raportowana"
+5,shareholder_net_profit,net_profit,TAK,"Gdy spolka nie rozbija zysku na akcjonariuszy jednostki dominujacej i udzialy niekontrolujace (brak mniejszosci), standard powtarza zysk netto. Regula WARUNKOWA - nie rusza spolek, ktore ten podzial podaja"
 4,change_in_working_capital,change_in_receivables + change_in_inventories + change_in_payables + change_in_other_assets,NIE,UWAGA: przy fladze kapital_obrotowy_z_bilansu=TAK te 4 klucze sa i tak nadpisywane wyliczeniem z bilansu
+6,before_tax_profit,ebit + finance_income - finance_costs + other_income,TAK,"Orange nie pokazuje linii ""zysk przed opodatkowaniem"" - idzie od kosztow finansowych netto prosto do podatku. Regula WARUNKOWA: nie rusza spolek, ktore te linie podaja"
+7,net_gross_profit,before_tax_profit - extraordinary_profit,TAK,"Standard trzyma ""zysk z dzialalnosci gospodarczej"" rowny zyskowi przed opodatkowaniem, gdy nie ma zdarzen nadzwyczajnych"
+8,noncurrent_assets,property + intangible_assets + noncurrent_investments + noncurrent_receivables + other_noncurrent_assets,TAK,"Dla spolek z PLASKIM bilansem (PZU), ktore nie podaja sumy aktywow trwalych. Regula WARUNKOWA - nie rusza spolek, ktore te sume raportuja"
+9,current_assets,inventory + current_receivables + current_investments + other_current_assets + assets_for_sale,TAK,j.w. dla aktywow obrotowych

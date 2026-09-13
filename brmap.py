@@ -24,7 +24,10 @@ def norm(s):
     myslnik = s.startswith("-")
     # UWAGA: 'l' z kreska (U+0142) NIE jest znakiem skladanym, wiec NFKD go nie rozlozy.
     # Bez tego "Przeplywy" normalizowalo sie do "przep ywy" i psulo dopasowania.
-    for a, b in (("ł", "l"), ("Ł", "L"), ("đ", "d"), ("ø", "o"), ("æ", "ae"), ("ß", "ss")):
+    # "Ŝ" to pozostalosc po starym kodowaniu (Mazovia/CP1250) - w polskich sprawozdaniach
+    # zawsze oznacza "z": "NaleŜnosci", "PoŜyczki", "pienięŜne" (tak ma Dom Development).
+    for a, b in (("ł", "l"), ("Ł", "L"), ("Ŝ", "z"), ("ŝ", "z"),
+                 ("đ", "d"), ("ø", "o"), ("æ", "ae"), ("ß", "ss")):
         s = s.replace(a, b)
     s = unicodedata.normalize("NFKD", s)
     s = "".join(c for c in s if not unicodedata.combining(c))
@@ -57,9 +60,14 @@ def load_slownik(path):
     wb = openpyxl.load_workbook(path, data_only=True)
     return {
         "klucze":   read_sheet(wb, "Klucze"),
+        # drugi szablon standardu - banki maja wlasny zestaw kluczy (RAP_B)
+        "klucze_b": read_sheet(wb, "Klucze_B") if "Klucze_B" in wb.sheetnames else [],
         "aliasy":   read_sheet(wb, "Aliasy"),
         "reguly":   read_sheet(wb, "Reguly_obliczane"),
         "spolki":   read_sheet(wb, "Spolki"),
+        # arkusz opcjonalny: niezweryfikowane nazwy uzywane WYLACZNIE do podpowiedzi kreatora.
+        # apply_mapping ich nie widzi - do mapowania licza sie tylko 'Aliasy'.
+        "kandydaci": read_sheet(wb, "Aliasy_kandydaci") if "Aliasy_kandydaci" in wb.sheetnames else [],
     }
 
 # ---------- parsowanie pliku spolki ----------
@@ -74,8 +82,18 @@ def parse_company(path, cfg):
     """
     wb = openpyxl.load_workbook(path, data_only=True)
     ws = wb[cfg["arkusz"]]
-    col_name = int(cfg["kol_nazwa"])
+    # kol_nazwa moze byc lista, np. "1,2". Sprawozdania z ESEF miewaja tabele
+    # dwupoziomowa: kolumna 1 to strona bilansu ("Aktywa"/"Pasywa"), a nazwa pozycji
+    # stoi dopiero w kolumnie 2. Bierzemy wtedy OSTATNIA niepusta komorke, ktora nie
+    # jest liczba - w rachunku wynikow kolumna 2 trzyma juz wartosc, wiec odpada sama.
+    cols_name = [int(c) for c in str(cfg["kol_nazwa"]).split(",") if str(c).strip()] or [1]
     cols_val = [int(c) for c in str(cfg["kol_wartosci"]).split(",")]
+    # Niektore spolki podaja rachunek wynikow narastajaco w innej kolumnie niz bilans
+    # (Wawel za 9 miesiecy: RZiS w kol. 3, bilans na 30.09 w kol. 2). Wtedy 'kol_wartosci_bilans'
+    # nadpisuje kolumny dla sekcji bilansowych.
+    cols_bil = [int(c) for c in str(cfg.get("kol_wartosci_bilans") or "").split(",") if str(c).strip()]
+    # ... a rachunek wynikow jeszcze inne (Pekao: RZiS ma 4 kolumny, przeplywy 2)
+    cols_rzis = [int(c) for c in str(cfg.get("kol_wartosci_rzis") or "").split(",") if str(c).strip()]
     mnoznik = float(cfg.get("mnoznik") or 1)
 
     start_mark, end_mark = {}, {}
@@ -86,29 +104,50 @@ def parse_company(path, cfg):
         k = k.strip()
         (end_mark if k.startswith("$") else start_mark)[_bez_numeracji(k.lstrip("$"))] = v.strip()
 
+    SEKCJE_BILANSU = {"BILANS", "AKT_TRW", "AKT_OBR", "AKTYWA", "KAPITAL", "ZOB_DL", "ZOB_KR", "PASYWA",
+                      "BANK_A", "BANK_P"}
+    SEKCJE_RZIS = {"RZIS", "RZIS_ZYSK", "RZIS_CD"}
     items, bufor, sekcja_biezaca = [], [], "?"
 
     def flush(sekcja):
         for it in bufor:
             it["sekcja"] = sekcja
+            if cols_bil and sekcja in SEKCJE_BILANSU:
+                it["wartosci"] = it["wartosci_bilans"]
+            elif cols_rzis and sekcja in SEKCJE_RZIS:
+                it["wartosci"] = it["wartosci_rzis"]
+            it.pop("wartosci_bilans", None)
+            it.pop("wartosci_rzis", None)
             items.append(it)
         bufor.clear()
 
     for i, row in enumerate(ws.iter_rows(min_row=1, values_only=True), 1):
-        nazwa = row[col_name - 1] if len(row) >= col_name else None
-        if nazwa is None or str(nazwa).strip() == "":
+        nazwa = None
+        for _c in cols_name:
+            v = row[_c - 1] if len(row) >= _c else None
+            if v is None or str(v).strip() == "" or isinstance(v, (int, float)):
+                continue
+            nazwa = str(v).strip()
+        if nazwa is None:
             continue
         n = _bez_numeracji(nazwa)
-        vals = []
-        for c in cols_val:
-            v = row[c - 1] if len(row) >= c else None
-            if isinstance(v, (int, float)):
-                v = v * mnoznik
-                vals.append(round(v) if mnoznik < 1 else v)   # dane w zlotych -> pelne tysiace
-            else:
-                vals.append(None)
+
+        def czytaj(kolumny):
+            out = []
+            for c in kolumny:
+                v = row[c - 1] if len(row) >= c else None
+                if isinstance(v, (int, float)):
+                    v = v * mnoznik
+                    out.append(round(v) if mnoznik < 1 else v)   # dane w zlotych -> pelne tysiace
+                else:
+                    out.append(None)
+            return out
+
+        vals = czytaj(cols_val)
         it = {"sekcja": None, "wiersz": i, "nazwa": str(nazwa).strip(),
-              "nazwa_norm": norm(nazwa), "wartosci": vals}
+              "nazwa_norm": norm(nazwa), "wartosci": vals,
+              "wartosci_bilans": czytaj(cols_bil) if cols_bil else vals,
+              "wartosci_rzis": czytaj(cols_rzis) if cols_rzis else vals}
 
         if n in start_mark:                       # naglowek otwierajacy blok
             flush(sekcja_biezaca)
@@ -122,8 +161,8 @@ def parse_company(path, cfg):
             # bufora, jesli wewnatrz trwa juz drobniejsza sekcja (uklad UoR)
             if kod in ("AKTYWA", "PASYWA") and sekcja_biezaca not in ("AKTYWA", "PASYWA", "?") and bufor:
                 flush(sekcja_biezaca)
-                it["sekcja"] = kod
-                items.append(it)
+                bufor.append(it)        # przez flush, zeby zadzialala podmiana kolumn bilansu
+                flush(kod)
             else:
                 bufor.append(it)
                 flush(kod)
@@ -131,6 +170,26 @@ def parse_company(path, cfg):
         bufor.append(it)
     flush(sekcja_biezaca)
     return items
+
+DATA_RE = re.compile(r"(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{2,4})")
+
+
+def daty_z_naglowkow(naglowki):
+    """Wyciaga daty bilansowe z opisow okresow (ostatnia data w kazdym opisie)."""
+    out = []
+    for h in str(naglowki or "").split("|"):
+        znal = DATA_RE.findall(h)
+        if not znal:
+            out.append(None)
+            continue
+        d, m, y = znal[-1]
+        y = int(y) + (2000 if int(y) < 100 else 0)
+        try:
+            out.append(datetime.datetime(y, int(m), int(d)))
+        except ValueError:
+            out.append(None)
+    return out
+
 
 # ---------- mapowanie ----------
 def build_index(aliasy, spolka):
@@ -229,7 +288,8 @@ def kapital_obrotowy_z_bilansu(w, n_kol, poprzedni=None):
 
     def biez(k, j):
         v = w.get(k)
-        return (v[j] if v and j < len(v) else 0) or 0
+        x = (v[j] if v and j < len(v) else 0) or 0
+        return x if isinstance(x, (int, float)) else 0
 
     for j in range(n_kol):
         if j == 0 and poprzedni is not None:
@@ -252,16 +312,70 @@ def kapital_obrotowy_z_bilansu(w, n_kol, poprzedni=None):
 
 # ---------- walidacja ----------
 def g_pub(k, j, w, n_kol):
-    return (w.get(k) or [0.0] * n_kol)[j] or 0.0
+    x = (w.get(k) or [0.0] * n_kol)[j] or 0.0
+    return x if isinstance(x, (int, float)) else 0.0
+
+def waliduj_bank(w, n_kol, tol=1.0):
+    def g(k, j):
+        x = (w.get(k) or [0.0] * n_kol)[j] or 0.0
+        return x if isinstance(x, (int, float)) else 0.0
+    AKT = ["cash_and_balances_with_the_central_bank", "loans_to_banks", "financial_assets_held_for_trading",
+           "held_to_maturity_financial_assets", "loans_to_customers", "other_financial_assets",
+           "investments_in_subsidiaries", "intangible_assets", "property", "tax_assets", "other_assets"]
+    ZOB = ["liabilities_due_to_the_central_bank", "liabilities_due_to_banks",
+           "held_to_maturity_financial_liabilities", "financial_liabilities_held_for_trading",
+           "liabilities_due_to_customers", "debt_securities", "subordinated_liabilities",
+           "tax_liabilities", "other_liabilities"]
+    KAP = ["share_capital", "share_premium", "own_share", "revaluation_reserves",
+           "retained_earnings", "year_profit"]
+    OPER = ["net_interest_income", "net_fee_income", "dividend_income", "realised_gains",
+            "net_other_financial_income", "net_other_operating_income", "impairment_losses",
+            "administration_costs", "net_other_operating_costs", "bank_tax"]
+    testy = [
+        ("Aktywa = Pasywa", lambda j: g("total_assets", j) - g("total_equity_liabilities", j)),
+        ("Skladniki aktywow", lambda j: sum(g(k, j) for k in AKT) - g("total_assets", j)),
+        ("Skladniki zobowiazan", lambda j: sum(g(k, j) for k in ZOB) - g("total_liabilities", j)),
+        ("Kapital wlasny akcjonariuszy", lambda j: sum(g(k, j) for k in KAP) - g("own_capital", j)),
+        ("Kapitaly razem", lambda j: g("own_capital", j) + g("non_control_profit", j) - g("total_capital", j)),
+        ("Zobowiazania + kapitaly = pasywa",
+         lambda j: g("total_liabilities", j) + g("total_capital", j) - g("total_equity_liabilities", j)),
+        ("WNiP = firma + pozostale",
+         lambda j: g("goodwill", j) + g("other_intangible_assets", j) - g("intangible_assets", j)),
+        ("Wynik odsetkowy", lambda j: g("interest_income", j) - g("interest_expense", j) - g("net_interest_income", j)),
+        ("Wynik prowizyjny", lambda j: g("fee_income", j) - g("fee_expense", j) - g("net_fee_income", j)),
+        ("Wynik operacyjny", lambda j: sum(g(k, j) for k in OPER) - g("net_operating_profit", j)),
+        ("Zysk przed opodatkowaniem",
+         lambda j: g("net_operating_profit", j) + g("related_income", j) - g("beforetax_profit", j)),
+        ("Przeplywy razem", lambda j: g("operating_cashflow", j) + g("investing_cashflow", j)
+         + g("financing_cashflow", j) - g("net_cashflow", j)),
+    ]
+    out = []
+    for nazwa, fn in testy:
+        row = [nazwa]
+        for j in range(n_kol):
+            d = fn(j)
+            row.append("OK" if abs(d) <= tol else f"ROZNICA {d:,.0f}")
+        out.append(row)
+    row = ["Implikowana stopa podatku (0-40%)"]
+    for j in range(n_kol):
+        bt, npf = g("beforetax_profit", j), g("net_profit", j)
+        r = (bt - npf) / bt if bt > 0 else None
+        row.append("brak danych" if r is None else
+                   (f"OK ({r:.1%})" if 0 <= r <= 0.40 else f"PODEJRZANA {r:.1%}"))
+    out.append(row)
+    return out
+
 
 def waliduj(w, n_kol, tol=1.0):
     def g(k, j):
-        return (w.get(k) or [0.0] * n_kol)[j] or 0.0
+        x = (w.get(k) or [0.0] * n_kol)[j] or 0.0
+        return x if isinstance(x, (int, float)) else 0.0
     testy = [
         ("Aktywa = Pasywa", lambda j: g("total_assets", j) - g("total_equity_liabilities", j)),
-        ("Aktywa trwale + obrotowe = suma", lambda j: g("noncurrent_assets", j) + g("current_assets", j) + g("assets_for_sale", j) - g("total_assets", j)),
+        # assets_for_sale to linia INFORMACYJNA wewnatrz aktywow obrotowych, nie trzeci skladnik sumy
+        ("Aktywa trwale + obrotowe = suma", lambda j: g("noncurrent_assets", j) + g("current_assets", j) - g("total_assets", j)),
         ("Skladniki aktywow trwalych", lambda j: g("property", j) + g("intangible_assets", j) + g("noncurrent_investments", j) + g("noncurrent_receivables", j) + g("other_noncurrent_assets", j) - g("noncurrent_assets", j)),
-        ("Skladniki aktywow obrotowych", lambda j: g("inventory", j) + g("current_receivables", j) + g("current_investments", j) + g("other_current_assets", j) - g("current_assets", j)),
+        ("Skladniki aktywow obrotowych", lambda j: g("inventory", j) + g("current_receivables", j) + g("current_investments", j) + g("other_current_assets", j) + g("assets_for_sale", j) - g("current_assets", j)),
         ("Skladniki kapitalu wlasnego", lambda j: g("share_capital", j) + g("own_share", j) + g("reserve", j) + g("retained_earnings", j) + g("year_profit", j) + g("nonshare_capital", j) + g("kapitaly_pozostale_nierozdzielone", j) - g("capital", j)),
         ("Kapital + zobowiazania = pasywa", lambda j: g("capital", j) + g("noncurrent_liabilities", j) + g("current_liabilities", j) + g("reckoning", j) - g("total_equity_liabilities", j)),
         ("Skladniki zob. dlugoterminowych", lambda j: g("noncurrent_trade_payables", j) + g("noncurrent_borrowings", j) + g("noncurrent_obligations", j) + g("noncurrent_leasing", j) + g("noncurrent_other_liabilities", j) - g("noncurrent_liabilities", j)),
@@ -284,7 +398,7 @@ def waliduj(w, n_kol, tol=1.0):
         row = [nazwa]
         for j in range(n_kol):
             d = fn(j)
-            row.append("OK" if abs(d) < tol else f"ROZNICA {d:,.0f}")
+            row.append("OK" if abs(d) <= tol else f"ROZNICA {d:,.0f}")
         out.append(row)
     row = ["Implikowana stopa podatku (0-40%)"]
     for j in range(n_kol):
@@ -322,7 +436,8 @@ def zapisz(out_path, klucze, wyniki, naglowki, audyt, niezmapowane, walid):
         v = wyniki.get(sk)
         if v is None:   # klucz bez zrodla: 0 dla pozycji finansowych, pusto dla metadanych
             v = [None] * n_kol if (k.get("sekcja") or "") == "META" else [0.0] * n_kol
-        ws.append([sk, k.get("etykieta_pl"), k.get("sekcja")] + [round(x, 2) if x is not None else None for x in v])
+        ws.append([sk, k.get("etykieta_pl"), k.get("sekcja")] +
+                  [(round(x, 2) if isinstance(x, (int, float)) else x) for x in v])
     style_header(ws, 3 + n_kol)
     ws.column_dimensions["A"].width = 30; ws.column_dimensions["B"].width = 48
     ws.column_dimensions["C"].width = 16
@@ -383,8 +498,9 @@ WZORCE_SEKCJI = [
     (r"^(kapital wlasny|kapitaly wlasne)( razem| ogolem)?$", "KAPITAL"),
     (r"^zobowiazania dlugoterminowe( razem| ogolem)?$", "ZOB_DL"),
     (r"^zobowiazania krotkoterminowe( razem| ogolem)?$", "ZOB_KR"),
-    (r"^(razem )?aktywa( razem| ogolem)?$", "AKTYWA"),
-    (r"^(razem )?(pasywa|zobowiazania i kapital wlasny|kapital wlasny i zobowiazania)( razem| ogolem)?$", "PASYWA"),
+    (r"^(razem |suma )?aktywa(ow)?( razem| ogolem)?$", "AKTYWA"),
+    (r"^suma aktywow$", "AKTYWA"),
+    (r"^(razem |suma )?(pasywa|pasywow|zobowiazania i kapital wlasny|kapital wlasny i zobowiazania)( razem| ogolem)?$", "PASYWA"),
     (r"^zobowiazania i rezerwy na zobowiazania$", "PASYWA"),
 ]
 
@@ -445,20 +561,72 @@ def zbadaj_plik(plik, arkusz=None):
             if len(kand) == len(kol_wartosci):
                 naglowki = kand
 
-    # znaczniki sekcji
-    sekcje, wykryte = [], []
+    # --- znaczniki sekcji ---
+    # Najpierw znajdz kandydatow, potem rozstrzygnij czy suma OTWIERA czy ZAMYKA blok.
+    kandydaci = []
     for i, r in enumerate(rows, 1):
         nazwa = r[kol_nazwa - 1] if len(r) >= kol_nazwa else None
         if not isinstance(nazwa, str) or not nazwa.strip():
             continue
         kod = _dopasuj_sekcje(_bez_numeracji(nazwa))
-        if not kod:
+        if kod:
+            kandydaci.append((i, nazwa.strip(), kod))
+
+    kol1 = kol_wartosci[0] if kol_wartosci else 2
+
+    def wartosc(i):
+        r = rows[i - 1]
+        v = r[kol1 - 1] if len(r) >= kol1 else None
+        return v if isinstance(v, (int, float)) else None
+
+    def skladnik(i):
+        """Czy wiersz jest samodzielna pozycja, a nie rozwinieciem 'w tym'."""
+        r = rows[i - 1]
+        n = r[kol_nazwa - 1] if len(r) >= kol_nazwa else None
+        if not isinstance(n, str) or not n.strip():
+            return False
+        t = n.strip()
+        return not (t[:1].islower() or t.startswith("-") or "w tym" in t.lower())
+
+    def suma_do_przodu(poz, i, v):
+        """Czy ktorykolwiek POCZATKOWY fragment wierszy PO sumie daje dokladnie te sume?
+        Jesli tak, suma otwiera blok. Sprawdzamy narastajaco, bo dalej moga stac
+        zagniezdzone sumy posrednie, ktore by wynik zdublowaly."""
+        nastepny = kandydaci[poz + 1][0] if poz + 1 < len(kandydaci) else len(rows) + 1
+        biezaca = 0.0
+        for j in range(i + 1, nastepny):
+            if not skladnik(j):
+                continue
+            biezaca += wartosc(j) or 0
+            if abs(biezaca - v) <= max(2.0, abs(v) * 1e-5):
+                return True
+        return False
+
+    # Uklad sprawozdania jest jednolity w calym pliku, wiec zamiast decydowac osobno
+    # dla kazdej sumy - glosujemy. Pojedynczy blok potrafi zmylic (zagniezdzone sumy),
+    # ale caly plik juz nie.
+    glosy_poczatek = glosy_koniec = 0
+    for poz, (i, nazwa, kod) in enumerate(kandydaci):
+        v = wartosc(i)
+        if v is None or _ma_numeracje(nazwa) or kod in ("AKTYWA", "PASYWA", "BILANS", "RZIS", "CF", "CF_INW", "CF_FIN"):
             continue
-        ma_liczby = any(isinstance(r[c - 1], (int, float)) for c in kol_wartosci if len(r) >= c)
-        # w ukladzie UoR suma stoi na POCZATKU bloku (A. Aktywa trwale 1364106,89)
-        typ = "koniec" if (ma_liczby and not _ma_numeracje(nazwa)) else "poczatek"
-        sekcje.append(("$" if typ == "koniec" else "") + nazwa.strip() + "=>" + kod)
-        wykryte.append({"wiersz": i, "nazwa": nazwa.strip(), "kod": kod, "typ": typ})
+        if suma_do_przodu(poz, i, v):
+            glosy_poczatek += 1
+        else:
+            glosy_koniec += 1
+    sumy_otwieraja = glosy_poczatek > glosy_koniec
+
+    sekcje, wykryte = [], []
+    for poz, (i, nazwa, kod) in enumerate(kandydaci):
+        v = wartosc(i)
+        if v is None or _ma_numeracje(nazwa):
+            typ = "poczatek"
+        elif kod in ("AKTYWA", "PASYWA"):
+            typ = "koniec"          # "Aktywa razem" / "Pasywa razem" to zawsze pojedyncza linia
+        else:
+            typ = "poczatek" if sumy_otwieraja else "koniec"
+        sekcje.append(("$" if typ == "koniec" else "") + nazwa + "=>" + kod)
+        wykryte.append({"wiersz": i, "nazwa": nazwa, "kod": kod, "typ": typ})
 
     return {
         "arkusz": arkusz,
@@ -495,10 +663,17 @@ def zaproponuj_aliasy(plik, cfg, slownik_path, spolka=""):
     sekcja_klucza = {(k.get("standard_key") or "").strip(): (k.get("sekcja") or "") for k in sl["klucze"]}
     klucze_std = [(k.get("standard_key"), k.get("etykieta_pl")) for k in sl["klucze"] if k.get("standard_key")]
 
-    znane = []                       # (sekcja, nazwa_norm, standard_key)
+    znane = []                       # (sekcja, nazwa_norm, standard_key, zweryfikowany)
     for (sek, nn), reguly in idx.items():
         for r in reguly:
-            znane.append((sek, nn, (r.get("standard_key") or "").strip()))
+            znane.append((sek, nn, (r.get("standard_key") or "").strip(), True))
+    # Kandydaci (arkusz Aliasy_kandydaci) nie maja sekcji ani znaku i nie byli sprawdzeni
+    # wzorcem. Pasuja do dowolnej sekcji, ale ich pewnosc jest z gory ograniczona do NISKA -
+    # inaczej dopasowanie po dokladnej nazwie awansowaloby je na ZOLTE, ktore ma byc pewne.
+    for k in sl.get("kandydaci", []):
+        sk = str(k.get("standard_key") or "").strip()
+        if sk and not sk.endswith("?"):
+            znane.append(("*", norm(k.get("nazwa_oryginalna")), sk, False))
 
     # wiersze bedace znacznikami sekcji (sumy zamykajace bloki)
     markery = {s["wiersz"]: s for s in cfg.get("wykryte_sekcje", [])}
@@ -524,38 +699,46 @@ def zaproponuj_aliasy(plik, cfg, slownik_path, spolka=""):
         else:
             # kandydaci: identyczna nazwa najpierw, potem rozmyte; ZAWSZE premia za te sama sekcje
             ranking = []
-            for sek, nn, sk in znane:
+            for sek, nn, sk, pewny in znane:
                 if not sk:
                     continue
                 pod = 1.0 if nn == it["nazwa_norm"] else similar(it["nazwa_norm"], nn)
                 if pod < 0.4:
                     continue
-                ranking.append((pod + (0.35 if sek == it["sekcja"] else 0.0), pod, sek, nn, sk))
+                premia = 0.35 if sek == it["sekcja"] else 0.0
+                if not pewny:
+                    premia -= 0.10          # zweryfikowany alias zawsze przed kandydatem
+                ranking.append((pod + premia, pod, sek, nn, sk, pewny))
             ranking.sort(reverse=True)
 
             prog = 0.5 if n_tokenow >= 3 else 0.95     # krotkie nazwy typu "Pozostale" daja smieciowe dopasowania
             if ranking and ranking[0][1] >= prog:
-                _, pod, sek, nn, sk = ranking[0]
-                ta_sama = sek == it["sekcja"]
+                _, pod, sek, nn, sk, pewny = ranking[0]
+                ta_sama = sek == it["sekcja"] and pewny
                 # pozycja CF wskazujaca na klucz z RZiS/bilansu to zwykle powtorzenie punktu wyjscia
                 if it["sekcja"].startswith("CF") and sekcja_klucza.get(sk, "") in ("RZIS", "BILANS_AKTYWA", "BILANS_PASYWA"):
-                    prop, pewnosc = "POMIN", "SREDNIA"
-                    uwaga = f"w przeplywach powtarza sie pozycja z {sekcja_klucza.get(sk)} ({sk}) - zwykle duplikat"
+                    prop = "POMIN"
+                    pewnosc = "SREDNIA" if pewny else "NISKA"
+                    uwaga = (f"w przeplywach powtarza sie pozycja z {sekcja_klucza.get(sk)} ({sk}) - zwykle duplikat"
+                             + ("" if pewny else "; podpowiedz z arkusza kandydatow"))
                 else:
                     prop = sk
-                    if pod >= 0.99 and ta_sama:
+                    if not pewny:
+                        pewnosc = "NISKA"
+                        uwaga = f"z arkusza kandydatow (niezweryfikowane, bez sekcji i znaku): {nn[:48]}"
+                    elif pod >= 0.99 and ta_sama:
                         pewnosc, uwaga = "WYSOKA", "nazwa identyczna z istniejacym aliasem w tej samej sekcji"
                     elif pod >= 0.99:
                         pewnosc = "SREDNIA"
                         uwaga = f"nazwa identyczna, ale alias pochodzi z sekcji {sek} - SPRAWDZ czy tu znaczy to samo"
-                    elif ta_sama and pod >= 0.7:
+                    elif ta_sama and pod >= 0.85:
                         pewnosc, uwaga = "SREDNIA", f"dopasowanie {pod:.2f} w tej samej sekcji do: {nn[:52]}"
                     else:
                         pewnosc, uwaga = "NISKA", f"dopasowanie {pod:.2f} (sekcja {sek}) do: {nn[:52]}"
-                kandydaci = [f"{p:.2f} {s}:{k}" for _, p, s, _, k in ranking[1:4]]
+                kandydaci = [f"{p:.2f} {s}:{k}" for _, p, s, _, k, _w in ranking[1:4]]
             else:
                 uwaga = "brak wiarygodnej podpowiedzi - zmapuj recznie (lista kluczy w arkuszu 4)"
-                kandydaci = [f"{p:.2f} {s}:{k}" for _, p, s, _, k in ranking[:3]]
+                kandydaci = [f"{p:.2f} {s}:{k}" for _, p, s, _, k, _w in ranking[:3]]
 
         znak = -1 if (prop in KLUCZE_KOSZTOWE and wart and max(wart) <= 0) else 1
         propozycje.append({
@@ -656,19 +839,53 @@ def nowa_spolka(plik, slownik_path="slownik.xlsx", spolka="XXX", nazwa="", arkus
 # =====================================================================
 #  FUNKCJE WYSOKIEGO POZIOMU
 # =====================================================================
-def wczytaj_okres_wzorca(wzorzec, data, arkusz="Spr Fin"):
+def wczytaj_okres_wzorca(wzorzec, data=None, arkusz="Spr Fin", naglowek_okresu=None):
     """Wyciaga kolumne z pliku wzorcowego - do policzenia kapitalu obrotowego, gdy
-    sprawozdanie spolki nie zawiera bilansu poprzedniego kwartalu (np. uklad UoR,
-    gdzie kolumna porownawcza to ten sam kwartal rok wczesniej)."""
-    cel = datetime.datetime.strptime(data, "%Y-%m-%d")
+    sprawozdanie spolki nie zawiera bilansu okresu odniesienia (uklad UoR, gdzie kolumna
+    porownawcza to ten sam kwartal rok wczesniej; albo raport roczny, ktory PRZEKSZTALCA
+    dane porownawcze - wtedy standard trzyma pierwotnie raportowany bilans).
+
+    Okres wskazuje sie data bilansowa albo naglowkiem kolumny."""
     rows = list(openpyxl.load_workbook(wzorzec, read_only=True, data_only=True)[arkusz]
                 .iter_rows(min_row=1, max_row=110, values_only=True))
-    daty = next(r for r in rows if r[0] and str(r[0]).strip() == "balance_date")
-    kol = next(i for i in range(len(daty)) if isinstance(daty[i], datetime.datetime) and daty[i] == cel)
+    if naglowek_okresu:
+        kol = next((i for i in range(len(rows[0]))
+                    if str(rows[0][i]).strip() == str(naglowek_okresu).strip()), None)
+    else:
+        cel = datetime.datetime.strptime(data, "%Y-%m-%d")
+        daty = next((r for r in rows if r[0] and str(r[0]).strip() == "balance_date"), None)
+        kol = None if daty is None else next(
+            (i for i in range(len(daty))
+             if isinstance(daty[i], datetime.datetime) and daty[i] == cel), None)
+    if kol is None:
+        raise ValueError(f"We wzorcu '{wzorzec}' nie ma kolumny {naglowek_okresu or data}")
     return {str(r[0]).strip(): r[kol] for r in rows if r[0] and isinstance(r[0], str)}
 
-def mapuj(slownik_path, spolka, plik, out=None, cicho=False, bilans_poprzedni=None):
-    out = out or f"wynik_{spolka}.xlsx"
+RZYMSKIE = {"i": 1, "ii": 2, "iii": 3, "iv": 4}
+
+def tag_okresu(naglowek, data=None):
+    """Skrot okresu do nazwy pliku: "I kw 2026 / 31.03.2026" -> "1Q2026".
+
+    Rozpoznaje kwartaly, polrocza i "N m-cy". Gdy nie ma pewnosci - zwraca sama date
+    bilansowa. Naglowek z PRZESUNIETYM rokiem obrotowym ("I kw obrotowy 2025/26") tez
+    idzie na date, bo "1Q2025" myloby sie z kwartalem kalendarzowym.
+    """
+    n = norm(naglowek)
+    rok = data.year if data else None
+    if rok and "obrotow" not in n:
+        m = re.match(r"(i{1,3}|iv)\s+kw\b", n)
+        if m:
+            return f"{RZYMSKIE[m.group(1)]}Q{rok}"
+        m = re.match(r"(i{1,3}|iv)\s+(polrocze|pol)\b", n)
+        if m:
+            return f"{RZYMSKIE[m.group(1)]}H{rok}"
+        m = re.match(r"(\d+)\s*m\s*cy\b", n)
+        if m:
+            return f"{m.group(1)}M{rok}"
+    return data.strftime("%Y-%m-%d") if data else "okres"
+
+def mapuj(slownik_path, spolka, plik, out=None, cicho=False, bilans_poprzedni=None,
+          okresy=None):
     sl = load_slownik(slownik_path)
     cfg = next((s for s in sl["spolki"] if str(s.get("spolka")).strip().upper() == spolka.upper()), None)
     if cfg is None:
@@ -676,18 +893,42 @@ def mapuj(slownik_path, spolka, plik, out=None, cicho=False, bilans_poprzedni=No
                          f"Uruchom najpierw brmap.nowa_spolka(...)")
     items = parse_company(plik, cfg)
     n_kol = len(str(cfg["kol_wartosci"]).split(","))
-    naglowki = [h.strip() for h in str(cfg.get("naglowki_okresow") or "").split("|")][:n_kol]
+    # Etykiety okresow mozna nadpisac z zewnatrz. Ten sam podmiot sklada raporty za rozne
+    # okresy w IDENTYCZNYM ukladzie, a kod spolki jest jednoczesnie kluczem wyjatkow -
+    # zalozenie drugiego kodu tylko dla podpisow kolumn gubiloby wszystkie wyjatki spolki.
+    zrodlo_naglowkow = "|".join(okresy) if okresy else str(cfg.get("naglowki_okresow") or "")
+    naglowki = [h.strip() for h in zrodlo_naglowkow.split("|")][:n_kol]
     while len(naglowki) < n_kol:
         naglowki.append(f"okres_{len(naglowki)+1}")
+    daty = daty_z_naglowkow(zrodlo_naglowkow)
+    # okres w nazwie pliku - inaczej kolejny raport tej samej spolki nadpisze poprzedni
+    out = out or f"wynik_{spolka.upper()}_{tag_okresu(naglowki[0], daty[0] if daty else None)}.xlsx"
 
-    idx = build_index(sl["aliasy"], spolka)
+    # wariant ukladu (np. III kwartal) dziedziczy wyjatki spolki macierzystej
+    kod_wyjatkow = str(cfg.get("wyjatki_z") or "").strip() or spolka
+    idx = build_index(sl["aliasy"], kod_wyjatkow)
     wyniki, uzyte, audyt, niezmapowane = apply_mapping(items, idx, n_kol)
     wyniki = apply_reguly(wyniki, sl["reguly"], n_kol)
-    if str(cfg.get("kapital_obrotowy_z_bilansu") or "").strip().upper() in ("TAK", "T", "1") or bilans_poprzedni:
+    if (str(cfg.get("kapital_obrotowy_z_bilansu") or "").strip().upper() in ("TAK", "T", "1")
+            or bilans_poprzedni):
         wyniki = kapital_obrotowy_z_bilansu(wyniki, n_kol, bilans_poprzedni)
-    tol = 2.0 if float(cfg.get("mnoznik") or 1) < 1 else 1.0   # dane w zlotych -> zaokraglenia +/-1
-    walid = waliduj(wyniki, n_kol, tol)
-    zapisz(out, sl["klucze"], wyniki, naglowki, audyt, niezmapowane, walid)
+    # tolerancja sum kontrolnych: z konfiguracji spolki, a jesli brak - z jednostki
+    tol = float(cfg.get("tolerancja") or 0) or (2.0 if float(cfg.get("mnoznik") or 1) < 1 else 1.0)
+    # metadane, ktore da sie wyprowadzic z konfiguracji - standard je wypelnia
+    # kolumna 'waluta' jest opcjonalna; przyjmujemy tylko poprawny kod (np. EUR), inaczej PLN
+    waluta = str(cfg.get("waluta") or "").strip().upper()
+    if not re.fullmatch(r"[A-Z]{3}", waluta):
+        waluta = "PLN"
+    wyniki["currency_id"] = [waluta] * n_kol
+    wyniki["balance_date"] = [(daty[j].strftime("%d.%m.%Y") if j < len(daty) and daty[j] else None)
+                              for j in range(n_kol)]
+
+    szablon = str(cfg.get("szablon") or "RAP").strip().upper()
+    if szablon == "RAP_B" and sl.get("klucze_b"):
+        klucze, walid = sl["klucze_b"], waliduj_bank(wyniki, n_kol, tol)
+    else:
+        klucze, walid = sl["klucze"], waliduj(wyniki, n_kol, tol)
+    zapisz(out, klucze, wyniki, naglowki, audyt, niezmapowane, walid)
 
     if not cicho:
         znane = [(k[1], v[0].get("standard_key")) for k, v in idx.items()]
@@ -703,14 +944,23 @@ def mapuj(slownik_path, spolka, plik, out=None, cicho=False, bilans_poprzedni=No
         print(f"Zapisano: {out}")
     return out, wyniki, walid, niezmapowane
 
-def porownaj(wzorzec, data, wynik, out=None, arkusz="Spr Fin", kolumna=4, cicho=False, tol=1.0):
-    """Porownuje wynik mapowania z plikiem wzorcowym w standardzie."""
+def porownaj(wzorzec, data, wynik, out=None, arkusz="Spr Fin", kolumna=4, cicho=False, tol=1.0,
+             naglowek_okresu=None):
+    """Porownuje wynik mapowania z plikiem wzorcowym w standardzie.
+
+    Kolumne wskazuje sie data bilansowa, a jesli ta jest we wzorcu bledna -
+    naglowkiem okresu (np. "II 2026").
+    """
     out = out or wynik.replace("wynik_", "porownanie_")
-    cel = datetime.datetime.strptime(data, "%Y-%m-%d")
     wb = openpyxl.load_workbook(wzorzec, read_only=True, data_only=True)
     rows = list(wb[arkusz].iter_rows(min_row=1, max_row=110, values_only=True))
-    daty = next(r for r in rows if r[0] and str(r[0]).strip() == "balance_date")
-    kol = next(i for i in range(len(daty)) if isinstance(daty[i], datetime.datetime) and daty[i] == cel)
+    if naglowek_okresu:
+        kol = next(i for i in range(len(rows[0]))
+                   if str(rows[0][i]).strip() == str(naglowek_okresu).strip())
+    else:
+        cel = datetime.datetime.strptime(data, "%Y-%m-%d")
+        daty = next(r for r in rows if r[0] and str(r[0]).strip() == "balance_date")
+        kol = next(i for i in range(len(daty)) if isinstance(daty[i], datetime.datetime) and daty[i] == cel)
     wzor = {str(r[0]).strip(): r[kol] for r in rows
             if r[0] and isinstance(r[0], str) and str(r[0]).strip() not in ("RAP", "end")}
 
@@ -730,7 +980,7 @@ def porownaj(wzorzec, data, wynik, out=None, arkusz="Spr Fin", kolumna=4, cicho=
             status, d = "TYLKO W JEDNYM", None; brak += 1
         else:
             d = mn - wn
-            status = "ZGODNE" if abs(d) < tol else "ROZNICA"
+            status = "ZGODNE" if abs(d) <= tol else "ROZNICA"
             zgodne, rozne = (zgodne + 1, rozne) if status == "ZGODNE" else (zgodne, rozne + 1)
         ws.append([k, ev, wn, mn, d, status])
 
